@@ -1,4 +1,9 @@
-[中文](https://github.com/leejaen/react-lz-editor/blob/master/README.cn.md)
+[中文](https://github.com/WHKFZYX-Tool/react-lz-editor-whkfzyx/blob/master/README.cn.md)
+
+# react-lz-editor-whkfzyx
+
+Modify based on [react-lz-editor](https://github.com/leejaen/react-lz-editor).
+Add an ordered list of unordered list and mixed, ordered and unordered list style selection.
 
 # react-lz-editor
 
