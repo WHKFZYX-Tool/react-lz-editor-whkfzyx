@@ -1,4 +1,4 @@
-[中文](https://github.com/leejaen/react-lz-editor/blob/master/README.cn.md)
+[中文](https://github.com/WHKFZYX-Tool/react-lz-editor-whkfzyx/blob/master/README.cn.md)
 
 # react-lz-editor-whkfzyx
 
