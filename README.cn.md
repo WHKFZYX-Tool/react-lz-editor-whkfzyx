@@ -1,4 +1,10 @@
 [ENGLISH](https://github.com/leejaen/react-lz-editor/blob/master/README.md)
+
+# react-lz-editor-whkfzyx
+
+基于[react-lz-editor](https://github.com/leejaen/react-lz-editor)修改。
+增加有序列表与无序列表的混编，以及有序与无序列表样式选择。
+
 # react-lz-editor
 
 An open source react rich-text editor ( mordern react editor includes media support such as texts, images, videos, audios, links etc. ), development based on Draft-Js and Ant-design, good support html, markdown, draft-raw mode.

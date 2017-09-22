@@ -1,5 +1,10 @@
 [中文](https://github.com/leejaen/react-lz-editor/blob/master/README.cn.md)
 
+# react-lz-editor-whkfzyx
+
+Modify based on [react-lz-editor] (https://github.com/leejaen/react-lz-editor).
+Add an ordered list of unordered list and mixed, ordered and unordered list style selection.
+
 # react-lz-editor
 
 An open source react rich-text editor ( mordern react editor includes media support such as texts, images, videos, audios, links etc. ), development based on Draft-Js and Ant-design, good support html, markdown, draft-raw mode. It's supports multiple languages well(English, Chinese and Russian for now) and welcome you add your language supports.
