@@ -2,7 +2,7 @@
 
 # react-lz-editor-whkfzyx
 
-Modify based on [react-lz-editor] (https://github.com/leejaen/react-lz-editor).
+Modify based on [react-lz-editor](https://github.com/leejaen/react-lz-editor).
 Add an ordered list of unordered list and mixed, ordered and unordered list style selection.
 
 # react-lz-editor
