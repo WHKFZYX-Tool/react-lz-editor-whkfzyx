@@ -8,7 +8,7 @@ var _AudioSpan = require('./AudioSpan');
 
 var _AudioSpan2 = _interopRequireDefault(_AudioSpan);
 
-var _draftJs = require('draft-js');
+var _draftJsWhkfzyx = require('draft-js-whkfzyx');
 
 var _main = require('../utils/stateUtils/main');
 
@@ -18,7 +18,7 @@ function findAudioEntities(contentBlock, callback) {
 
   contentBlock.findEntityRanges(function (character) {
     var entityKey = character.getEntity();
-    return entityKey != null && _draftJs.Entity.get(entityKey).getType() === _main.ENTITY_TYPE.AUDIO;
+    return entityKey != null && _draftJsWhkfzyx.Entity.get(entityKey).getType() === _main.ENTITY_TYPE.AUDIO;
   }, callback);
 }
 

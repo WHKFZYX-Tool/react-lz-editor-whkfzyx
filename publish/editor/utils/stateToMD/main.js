@@ -12,7 +12,13 @@ exports.default = stateToMarkdown;
 
 var _main = require('../stateUtils/main');
 
-var _draftJs = require('draft-js');
+var _draftJsWhkfzyx = require('draft-js-whkfzyx');
+
+var _DraftBlockTypeAnalysis = require('../DraftBlockTypeAnalysis');
+
+var _DraftBlockTypeAnalysis2 = _interopRequireDefault(_DraftBlockTypeAnalysis);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -50,6 +56,9 @@ var MarkupGenerator = function () {
     value: function processBlock() {
       var block = this.blocks[this.currentBlock];
       var blockType = block.getType();
+
+      blockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(blockType);
+
       switch (blockType) {
         case _main.BLOCK_TYPE.HEADER_ONE:
           {
@@ -92,6 +101,8 @@ var MarkupGenerator = function () {
             var blockDepth = block.getDepth();
             var lastBlock = this.getLastBlock();
             var lastBlockType = lastBlock ? lastBlock.getType() : null;
+
+            lastBlockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(lastBlockType);
             var lastBlockDepth = lastBlock && canHaveDepth(lastBlockType) ? lastBlock.getDepth() : null;
             if (lastBlockType !== blockType && lastBlockDepth !== blockDepth - 1) {
               this.insertLineBreaks(1);
@@ -109,6 +120,8 @@ var MarkupGenerator = function () {
             var _blockDepth = block.getDepth();
             var _lastBlock = this.getLastBlock();
             var _lastBlockType = _lastBlock ? _lastBlock.getType() : null;
+
+            _lastBlockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(_lastBlockType);
             var _lastBlockDepth = _lastBlock && canHaveDepth(_lastBlockType) ? _lastBlock.getDepth() : null;
             if (_lastBlockType !== blockType && _lastBlockDepth !== _blockDepth - 1) {
               this.insertLineBreaks(1);
@@ -158,6 +171,8 @@ var MarkupGenerator = function () {
     key: 'getListItemCount',
     value: function getListItemCount(block) {
       var blockType = block.getType();
+
+      blockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(blockType);
       var blockDepth = block.getDepth();
 
       var index = this.currentBlock - 1;
@@ -166,7 +181,7 @@ var MarkupGenerator = function () {
         index -= 1;
         prevBlock = this.blocks[index];
       }
-      if (!prevBlock || prevBlock.getType() !== blockType || prevBlock.getDepth() !== blockDepth) {
+      if (!prevBlock || _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(prevBlock.getType()) !== blockType || prevBlock.getDepth() !== blockDepth) {
         this.listItemCounts[blockDepth] = 0;
       }
       return this.listItemCounts[blockDepth] = this.listItemCounts[blockDepth] + 1;
@@ -182,6 +197,8 @@ var MarkupGenerator = function () {
     key: 'renderBlockContent',
     value: function renderBlockContent(block) {
       var blockType = block.getType();
+
+      blockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(blockType);
       var text = block.getText();
       if (text === '') {
         return '\u200B';
@@ -219,13 +236,13 @@ var MarkupGenerator = function () {
           }
           return content;
         }).join('');
-        var entity = entityKey ? _draftJs.Entity.get(entityKey) : null;
-        if (entity != null && entity.getType() === _main.ENTITY_TYPE.LINK) {
+        var entity = entityKey ? _draftJsWhkfzyx.Entity.get(entityKey) : null;
+        if (entity != null && _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(entity.getType()) === _main.ENTITY_TYPE.LINK) {
           var data = entity.getData();
           var url = data.url || '';
           var title = data.title ? ' "' + escapeTitle(data.title) + '"' : '';
           return '[' + content + '](' + encodeURL(url) + title + ')';
-        } else if (entity != null && entity.getType() === _main.ENTITY_TYPE.IMAGE) {
+        } else if (entity != null && _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(entity.getType()) === _main.ENTITY_TYPE.IMAGE) {
           var _data = entity.getData();
           var src = _data.src || '';
           var alt = _data.alt ? ' "' + escapeTitle(_data.alt) + '"' : '';
@@ -241,6 +258,8 @@ var MarkupGenerator = function () {
 }();
 
 function canHaveDepth(blockType) {
+  blockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(blockType);
+
   switch (blockType) {
     case _main.BLOCK_TYPE.UNORDERED_LIST_ITEM:
     case _main.BLOCK_TYPE.ORDERED_LIST_ITEM:

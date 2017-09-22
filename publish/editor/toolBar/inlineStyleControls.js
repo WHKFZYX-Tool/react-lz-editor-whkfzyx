@@ -48,6 +48,10 @@ var InlineStyleControls = function (_Component) {
         style: 'UNDERLINE',
         label: "editor_u"
       }, {
+        text: lang.textDelline,
+        style: 'STRIKETHROUGH',
+        label: "editor_d"
+      }, {
         text: lang.textCode,
         style: 'CODE',
         label: "editor_e"

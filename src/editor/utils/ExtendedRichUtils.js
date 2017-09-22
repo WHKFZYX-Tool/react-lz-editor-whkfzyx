@@ -1,4 +1,4 @@
-import { Modifier, EditorState, RichUtils } from 'draft-js';
+import { Modifier, EditorState, RichUtils } from 'draft-js-whkfzyx';
 import getCurrentlySelectedBlock from './getCurrentlySelectedBlock';
 
 export const ALIGNMENTS = {

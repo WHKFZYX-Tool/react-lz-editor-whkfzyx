@@ -8,7 +8,7 @@ var _ImageSpan = require('./ImageSpan');
 
 var _ImageSpan2 = _interopRequireDefault(_ImageSpan);
 
-var _draftJs = require('draft-js');
+var _draftJsWhkfzyx = require('draft-js-whkfzyx');
 
 var _main = require('../utils/stateUtils/main');
 
@@ -17,7 +17,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function findImageEntities(contentBlock, callback) {
   contentBlock.findEntityRanges(function (character) {
     var entityKey = character.getEntity();
-    return entityKey != null && _draftJs.Entity.get(entityKey).getType() === _main.ENTITY_TYPE.IMAGE;
+    return entityKey != null && _draftJsWhkfzyx.Entity.get(entityKey).getType() === _main.ENTITY_TYPE.IMAGE;
   }, callback);
 }
 

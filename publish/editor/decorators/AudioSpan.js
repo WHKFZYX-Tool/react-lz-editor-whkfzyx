@@ -10,7 +10,7 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _draftJs = require('draft-js');
+var _draftJsWhkfzyx = require('draft-js-whkfzyx');
 
 var _decoratorStyle = require('./decoratorStyle.css');
 
@@ -32,7 +32,7 @@ var AudioSpan = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (AudioSpan.__proto__ || Object.getPrototypeOf(AudioSpan)).call(this, props));
 
-    var entity = _draftJs.Entity.get(_this.props.entityKey);
+    var entity = _draftJsWhkfzyx.Entity.get(_this.props.entityKey);
 
     var _entity$getData = entity.getData(),
         width = _entity$getData.width,
@@ -54,7 +54,7 @@ var AudioSpan = function (_Component) {
           width = _state.width,
           height = _state.height;
 
-      var entity = _draftJs.Entity.get(this.props.entityKey);
+      var entity = _draftJsWhkfzyx.Entity.get(this.props.entityKey);
       var audio = document.createElement('audio');
 
       var _entity$getData2 = entity.getData(),
@@ -64,7 +64,7 @@ var AudioSpan = function (_Component) {
       audio.onload = function () {
         if (width == null || height == null) {
           _this2.setState({ width: audio.width, height: audio.height });
-          _draftJs.Entity.mergeData(_this2.props.entityKey, {
+          _draftJsWhkfzyx.Entity.mergeData(_this2.props.entityKey, {
             width: audio.width,
             height: audio.height,
             originalWidth: audio.width,
@@ -80,7 +80,7 @@ var AudioSpan = function (_Component) {
           width = _state2.width,
           height = _state2.height;
 
-      var entity = _draftJs.Entity.get(this.props.entityKey);
+      var entity = _draftJsWhkfzyx.Entity.get(this.props.entityKey);
 
       var _entity$getData3 = entity.getData(),
           src = _entity$getData3.src;
@@ -113,7 +113,7 @@ var AudioSpan = function (_Component) {
           height = _data$size.height;
 
       this.setState({ width: width, height: height });
-      _draftJs.Entity.mergeData(this.props.entityKey, { width: width, height: height });
+      _draftJsWhkfzyx.Entity.mergeData(this.props.entityKey, { width: width, height: height });
     }
   }]);
 

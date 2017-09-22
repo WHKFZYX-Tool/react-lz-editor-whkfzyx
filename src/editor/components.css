@@ -54,21 +54,150 @@
   font-size: 16px;
 }
 
-.public-DraftStyleDefault-ul {
-  list-style: disc;
-  padding-left: 2.0rem
+/****add class ol\ul****/
+
+.public-DraftStyleDefault-block {
+  position: relative;
+  white-space: pre-wrap;
 }
 
+.public-DraftStyleDefault-ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+.public-DraftStyleDefault-rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.public-DraftStyleDefault-listLTR {
+  direction: ltr;
+}
+
+.public-DraftStyleDefault-listRTL {
+  direction: rtl;
+}
+
+.public-DraftStyleDefault-ul,
 .public-DraftStyleDefault-ol {
-  padding-left: 2.0rem;
-  list-style-type: decimal;
-  counter-reset: ol-counter;
+  margin: 0px 0;
+  padding: 0;
 }
 
-.public-DraftStyleDefault-ol:before {
-  content: counter(ol-counter);
-  counter-increment: ol-counter;
+.public-DraftStyleDefault-depth0.public-DraftStyleDefault-listLTR {
+  margin-left: 1.5em;
 }
+
+.public-DraftStyleDefault-depth0.public-DraftStyleDefault-listRTL {
+  margin-right: 1.5em;
+}
+
+.public-DraftStyleDefault-depth1.public-DraftStyleDefault-listLTR {
+  margin-left: 3em;
+}
+
+.public-DraftStyleDefault-depth1.public-DraftStyleDefault-listRTL {
+  margin-right: 3em;
+}
+
+.public-DraftStyleDefault-depth2.public-DraftStyleDefault-listLTR {
+  margin-left: 4.5em;
+}
+
+.public-DraftStyleDefault-depth2.public-DraftStyleDefault-listRTL {
+  margin-right: 4.5em;
+}
+
+.public-DraftStyleDefault-depth3.public-DraftStyleDefault-listLTR {
+  margin-left: 6em;
+}
+
+.public-DraftStyleDefault-depth3.public-DraftStyleDefault-listRTL {
+  margin-right: 6em;
+}
+
+.public-DraftStyleDefault-depth4.public-DraftStyleDefault-listLTR {
+  margin-left: 7.5em;
+}
+
+.public-DraftStyleDefault-depth4.public-DraftStyleDefault-listRTL {
+  margin-right: 7.5em;
+}
+
+.public-DraftStyleDefault-unorderedListItem {
+  list-style-type: square;
+  position: relative;
+}
+
+.public-DraftStyleDefault-unorderedListItem.public-DraftStyleDefault-disc{
+  list-style-type: disc;
+}
+
+.public-DraftStyleDefault-unorderedListItem.public-DraftStyleDefault-circle{
+  list-style-type: circle;
+}
+
+.public-DraftStyleDefault-unorderedListItem.public-DraftStyleDefault-square{
+  list-style-type: square;
+}
+
+.public-DraftStyleDefault-unorderedListItem.public-DraftStyleDefault-image{
+  list-style-image: url('');
+}
+
+.public-DraftStyleDefault-orderedListItem {
+  list-style-type: none;
+  position: relative;
+}
+
+.public-DraftStyleDefault-orderedListItem.public-DraftStyleDefault-listLTR:before {
+  left: -36px;
+  position: absolute;
+  text-align: right;
+  width: 30px;
+}
+
+.public-DraftStyleDefault-orderedListItem.public-DraftStyleDefault-listRTL:before {
+  position: absolute;
+  right: -36px;
+  text-align: left;
+  width: 30px;
+}
+
+.public-DraftStyleDefault-orderedListItem:before {
+  content: counter(ol0) ". ";
+  counter-increment: ol0;
+}
+
+.public-DraftStyleDefault-orderedListItem.public-DraftStyleDefault-decimaltype1:before {
+  content: counter(ol1) ". ";
+  counter-increment: ol1;
+}
+
+.public-DraftStyleDefault-orderedListItem.public-DraftStyleDefault-decimaltype2:before {
+  content: counter(ol2) "). ";
+  counter-increment: ol2;
+}
+
+.public-DraftStyleDefault-orderedListItem.public-DraftStyleDefault-decimaltype3:before {
+  content: "(" counter(ol3) "). ";
+  counter-increment: ol3;
+} 
+
+.public-DraftStyleDefault-decimaltype1.public-DraftStyleDefault-reset {
+  counter-reset: ol1;
+}
+
+.public-DraftStyleDefault-decimaltype2.public-DraftStyleDefault-reset {
+  counter-reset: ol2;
+}
+
+.public-DraftStyleDefault-decimaltype3.public-DraftStyleDefault-reset {
+  counter-reset: ol3;
+}
+
+/****add class ol\ul****/
 
 .RichEditor-editor .public-DraftEditorPlaceholder-root,
 .RichEditor-editor .public-DraftEditor-content {
@@ -80,11 +209,11 @@
   min-height: 400px;
   line-height: initial;
 }
-
+/* 
 .public-DraftEditor-content>div>* {
   margin: 10px 0;
 }
-
+ */
 .public-DraftEditor-content pre {
   white-space: pre-wrap;
   word-wrap: break-word;

@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/WHKFZYX-Tool/react-lz-editor-whkfzyx.git"      
+    "url": "git+ssh://git@github.com/WHKFZYX-Tool/react-lz-editor-whkfzyx.git"
   },
   "keywords": [
     "react-editor",
@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "antd": "^2.8.3",
-    "draft-js": "^0.10.0",
+    "draft-js-whkfzyx": "^0.10.0",
     "immutable": "^3.8.1",
     "js-base64": "^2.1.9",
     "lodash": "^4.17.3",

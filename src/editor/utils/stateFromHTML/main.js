@@ -3,7 +3,7 @@
 import {stateFromElement} from '../index';
 import parseHTML from './parseHTML';
 
-import type {ContentState} from 'draft-js';
+import type {ContentState} from 'draft-js-whkfzyx';
 
 type Options = {
   parser?: (html: string) => Element;

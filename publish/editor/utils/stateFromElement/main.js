@@ -12,7 +12,7 @@ var _replaceTextWithMeta3 = require('./replaceTextWithMeta');
 
 var _replaceTextWithMeta4 = _interopRequireDefault(_replaceTextWithMeta3);
 
-var _draftJs = require('draft-js');
+var _draftJsWhkfzyx = require('draft-js-whkfzyx');
 
 var _immutable = require('immutable');
 
@@ -22,6 +22,10 @@ var _syntheticDom = require('synthetic-dom');
 
 var _colorConfig = require('../colorConfig');
 
+var _DraftBlockTypeAnalysis = require('../DraftBlockTypeAnalysis');
+
+var _DraftBlockTypeAnalysis2 = _interopRequireDefault(_DraftBlockTypeAnalysis);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29,8 +33,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var NO_STYLE = (0, _immutable.OrderedSet)();
 var NO_ENTITY = null;
 
-var EMPTY_BLOCK = new _draftJs.ContentBlock({
-  key: (0, _draftJs.genKey)(),
+var EMPTY_BLOCK = new _draftJsWhkfzyx.ContentBlock({
+  key: (0, _draftJsWhkfzyx.genKey)(),
   text: '',
   type: _main.BLOCK_TYPE.UNSTYLED,
   characterList: (0, _immutable.List)(),
@@ -78,35 +82,35 @@ var ELEM_TO_ENTITY = {
     var data = getEntityData(tagName, element);
 
     if (data.url != null) {
-      return _draftJs.Entity.create(_main.ENTITY_TYPE.LINK, 'MUTABLE', data);
+      return _draftJsWhkfzyx.Entity.create(_main.ENTITY_TYPE.LINK, 'MUTABLE', data);
     }
   },
   img: function img(tagName, element) {
     var data = getEntityData(tagName, element);
 
     if (data.src != null) {
-      return _draftJs.Entity.create(_main.ENTITY_TYPE.IMAGE, 'MUTABLE', data);
+      return _draftJsWhkfzyx.Entity.create(_main.ENTITY_TYPE.IMAGE, 'MUTABLE', data);
     }
   },
   video: function video(tagName, element) {
     var data = getEntityData(tagName, element);
 
     if (data.src != null) {
-      return _draftJs.Entity.create(_main.ENTITY_TYPE.VIDEO, 'MUTABLE', data);
+      return _draftJsWhkfzyx.Entity.create(_main.ENTITY_TYPE.VIDEO, 'MUTABLE', data);
     }
   },
   audio: function audio(tagName, element) {
     var data = getEntityData(tagName, element);
 
     if (data.src != null) {
-      return _draftJs.Entity.create(_main.ENTITY_TYPE.AUDIO, 'MUTABLE', data);
+      return _draftJsWhkfzyx.Entity.create(_main.ENTITY_TYPE.AUDIO, 'MUTABLE', data);
     }
   },
   span: function span(tagName, element) {
     var data = getEntityData(tagName, element);
 
     if (data.style != null) {
-      return _draftJs.Entity.create(_main.ENTITY_TYPE.SPAN, 'MUTABLE', data);
+      return _draftJsWhkfzyx.Entity.create(_main.ENTITY_TYPE.SPAN, 'MUTABLE', data);
     }
   }
 };
@@ -178,8 +182,8 @@ var BlockGenerator = function () {
         text = text.split(SOFT_BREAK_PLACEHOLDER).join('\n').replace("　", "");
 
         if ((text.length || includeEmptyBlock) && text != "\n") {
-          contentBlocks.push(new _draftJs.ContentBlock({
-            key: (0, _draftJs.genKey)(),
+          contentBlocks.push(new _draftJsWhkfzyx.ContentBlock({
+            key: (0, _draftJsWhkfzyx.genKey)(),
             text: text,
             type: block.type,
             characterList: characterMeta.toList(),
@@ -319,7 +323,7 @@ var BlockGenerator = function () {
       var block = this.blockStack.slice(-1)[0];
       var style = block.styleStack.slice(-1)[0];
       var entity = block.entityStack.slice(-1)[0];
-      var charMetadata = _draftJs.CharacterMetadata.create({
+      var charMetadata = _draftJsWhkfzyx.CharacterMetadata.create({
         style: style,
         entity: entity
       });
@@ -408,6 +412,8 @@ function collapseWhiteSpace(text, characterMeta) {
 }
 
 function canHaveDepth(blockType) {
+  blockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(blockType);
+
   switch (blockType) {
     case _main.BLOCK_TYPE.UNORDERED_LIST_ITEM:
     case _main.BLOCK_TYPE.ORDERED_LIST_ITEM:
@@ -487,5 +493,5 @@ function addStyleFromTagName(styleSet, tagName, elementStyles, element) {
 
 function stateFromElement(element, options) {
   var blocks = new BlockGenerator(options).process(element);
-  return _draftJs.ContentState.createFromBlockArray(blocks);
+  return _draftJsWhkfzyx.ContentState.createFromBlockArray(blocks);
 }

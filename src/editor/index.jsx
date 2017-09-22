@@ -23,7 +23,7 @@ import {
   KeyBindingUtil,
   DraftPasteProcessor,
   SelectionState
-} from 'draft-js';
+} from 'draft-js-whkfzyx';
 import {
   Upload,
   Modal,
@@ -148,6 +148,7 @@ class EditorConcist extends React.Component {
     this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
     this.customKeyBinding = this._customKeyBinding.bind(this);
     this.handlePastedText=this._handlePastedText.bind(this);
+    this.onTab = this._onTab.bind(this);
 
     /*VIDEO/AUDIO/IMAGE*/
     this.logState = () => {
@@ -506,6 +507,14 @@ class EditorConcist extends React.Component {
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, blockType));
   }
 
+  _onTab(e) {
+      const maxDepth = 4;
+      const editorState = RichUtils.onTab(e, this.state.editorState, maxDepth);
+      this.setState({
+          editorState
+      });
+  }  
+
   _toggleAlignment(alignment) {
     //This method only supports the data type like:
     //这种方式仅支持的数据类型:
@@ -738,6 +747,7 @@ class EditorConcist extends React.Component {
             handleKeyCommand={this.handleKeyCommand}
             keyBindingFn={this.customKeyBinding}
             onChange={this.onChange}
+            onTab={this.onTab}
             handlePastedText={this.handlePastedText}
             spellCheck={true}/>
         </div>

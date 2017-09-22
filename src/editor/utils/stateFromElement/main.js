@@ -7,11 +7,12 @@ import {
   ContentState,
   Entity,
   genKey,
-} from 'draft-js';
+} from 'draft-js-whkfzyx';
 import {List, OrderedSet, Repeat, Seq} from 'immutable';
 import {BLOCK_TYPE, ENTITY_TYPE, INLINE_STYLE} from '../stateUtils/main';
 import {NODE_TYPE_ELEMENT, NODE_TYPE_TEXT} from 'synthetic-dom';
 import {colorStyleMap} from "../colorConfig"
+import DraftBlockTypeAnalysis from '../DraftBlockTypeAnalysis'
 
 import type {Set, IndexedSeq} from 'immutable';
 import type {
@@ -415,6 +416,9 @@ function collapseWhiteSpace(text: string, characterMeta: CharacterMetaSeq): Text
 }
 
 function canHaveDepth(blockType: string): boolean {
+  //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+  blockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(blockType);  
+    
   switch (blockType) {
     case BLOCK_TYPE.UNORDERED_LIST_ITEM:
     case BLOCK_TYPE.ORDERED_LIST_ITEM: {

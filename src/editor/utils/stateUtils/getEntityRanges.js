@@ -1,7 +1,7 @@
 /* @flow */
 import {OrderedSet, is} from 'immutable';
 
-import type {CharacterMetadata} from 'draft-js';
+import type {CharacterMetadata} from 'draft-js-whkfzyx';
 import type {List} from 'immutable';
 
 type EntityKey = ?string;

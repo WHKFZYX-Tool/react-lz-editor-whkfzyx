@@ -1,6 +1,6 @@
 /* @flow */
 
-import {Entity} from 'draft-js';
+import {Entity} from 'draft-js-whkfzyx';
 import {
   getEntityRanges,
   BLOCK_TYPE,
@@ -8,9 +8,10 @@ import {
   INLINE_STYLE,
 } from '../stateUtils/main';
 
-import type {ContentState, ContentBlock, EntityInstance} from 'draft-js';
+import type {ContentState, ContentBlock, EntityInstance} from 'draft-js-whkfzyx';
 import type {CharacterMetaList} from '../stateUtils/main';
 import {colorStyleMap} from "../colorConfig"
+import DraftBlockTypeAnalysis from '../DraftBlockTypeAnalysis'
 
 type StringMap = {[key: string]: ?string};
 type AttrMap = {[key: string]: StringMap};
@@ -25,6 +26,8 @@ const {
 
 const INDENT = '  ';
 const BREAK = '<br>';
+const cx = require('fbjs/lib/cx');
+const joinClasses = require('fbjs/lib/joinClasses');
 
 // Map entity data to element attributes.
 const ENTITY_ATTR_MAP: AttrMap = {
@@ -96,6 +99,9 @@ const DATA_TO_ATTR = {
 // The reason this returns an array is because a single block might get wrapped
 // in two tags.
 function getTags(blockType: string): Array<string> {
+  //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+  blockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(blockType);  
+
   switch (blockType) {
     case BLOCK_TYPE.HEADER_ONE:
       return ['h1'];
@@ -124,6 +130,9 @@ function getTags(blockType: string): Array<string> {
 }
 
 function getWrapperTag(blockType: string): ?string {
+  //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+  blockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(blockType);  
+
   switch (blockType) {
     case BLOCK_TYPE.UNORDERED_LIST_ITEM:
       return 'ul';
@@ -143,6 +152,12 @@ class MarkupGenerator {
   output: Array<string>;
   totalBlocks: number;
   wrapperTag: ?string;
+  
+  maxLiDepth: number;   //最大<li>的depth，用于控制层级
+  previousBlockLastDepth: number;    //上一个有序或无序Block的层级Depth，用于控制混编
+  currentBlockDepth: number;   //当前Block的层级Depth
+  previousBlockDepth: number;  //上一个Block的层级Depth
+  currentBlockStyleNum: number;   //当前有序和无序列表样式层级数     
 
   constructor(contentState: ContentState) {
     this.contentState = contentState;
@@ -153,8 +168,15 @@ class MarkupGenerator {
     this.blocks = this.contentState.getBlocksAsArray();
     this.totalBlocks = this.blocks.length;
     this.currentBlock = 0;
-    this.indentLevel = 0;
+    //this.indentLevel = 0;
     this.wrapperTag = null;
+    
+    this.maxLiDepth = 0;   //最大<li>的depth，用于控制层级
+    this.previousBlockLastDepth = null;    //上一个有序或无序Block的层级Depth，用于控制混编
+    this.currentBlockDepth = null;   //当前Block的层级Depth
+    this.previousBlockDepth = null;  //上一个Block的层级Depth
+    this.currentBlockStyleNum = 0;   //当前有序和无序列表样式层级数       
+
     while (this.currentBlock < this.totalBlocks) {
       this.processBlock();
     }
@@ -165,6 +187,10 @@ class MarkupGenerator {
   processBlock() {
     let block = this.blocks[this.currentBlock];
     let blockType = block.getType();
+    //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+    blockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(blockType);  
+    const realBlockType = block.getType();    //当前真正的BlockType，用于处理有序和无序列表的其他样式。
+    let currentDepth = null;
     let blockData = block.getData();
     let newWrapperTag = getWrapperTag(blockType);
     if (this.wrapperTag !== newWrapperTag) {
@@ -175,9 +201,53 @@ class MarkupGenerator {
         this.openWrapperTag(newWrapperTag);
       }
     }
-    this.indent();
-    this.writeStartTag(blockType,blockData);
+    //this.indent();
+
+    const depth = block.getDepth();
+    //获取上一个Block和BlockType
+    let previousBlock = getPreviousBlock(this.blocks, this.currentBlock);
+    let previousBlockType = null;
+    let realPreviousBlockType = null;
+    if (previousBlock) {
+      previousBlockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(previousBlock.getType());
+      realPreviousBlockType = previousBlock.getType();
+    }
+    //如果上一个Block不属于序列 && 当前Block属于序列，就设置为一个新的序列树。
+    if (!canHaveDepth(previousBlockType) && canHaveDepth(blockType)) {
+      this.maxLiDepth = 0;
+      this.previousBlockLastDepth = null;
+      this.currentBlockDepth = null;
+      this.previousBlockDepth = null;
+    }
+
+    this.currentBlockDepth = depth;
+    //如果当前Block和上一个Block都是序列 && BlockType不同，就记录上一层级的Depth
+    if (canHaveDepth(blockType) && canHaveDepth(previousBlockType) && blockType !== previousBlockType) {
+      this.previousBlockLastDepth = this.maxLiDepth;
+    }
+    //获取当前Block的层级，上一层的层级数+当前depth>当前层级数，就赋值上一层的层级数+depth为当前层级，最大层级数为4。解决有序和无序列表混编  
+    if (this.previousBlockLastDepth !== null && this.previousBlockLastDepth + depth > this.currentBlockDepth) {
+      this.currentBlockDepth = (this.previousBlockLastDepth + depth) > 4 ? 4 : (this.previousBlockLastDepth + depth);
+    }    
+
+    //如果当层与上层的BlockType不同，样式就开始重新计数。相同则判断是否在同一层，如果不在同一层就+1
+    if (realBlockType !== realPreviousBlockType) {
+      this.currentBlockStyleNum = getBlockStyleNum(realBlockType);
+    } else {
+      if (this.previousBlockDepth !== null && this.previousBlockDepth !== this.currentBlockDepth) {
+        this.currentBlockStyleNum += 1;
+      }
+    } 
+
+    const olulType = blockType === 'unordered-list-item' 
+    ? DraftBlockTypeAnalysis.getUlStyleType(this.currentBlockStyleNum) 
+    : DraftBlockTypeAnalysis.getOlStyleType(this.currentBlockStyleNum);
+
+    const shouldResetCount = this.wrapperTag !== newWrapperTag || currentDepth === null || block.getDepth() > currentDepth;
+    let className = getListItemClasses(blockType,this.currentBlockDepth,shouldResetCount,'LTR',olulType);
+    this.writeStartTag(blockType,blockData,className);
     this.output.push(this.renderBlockContent(block));
+    this.writeEndTag(blockType);
     // Look ahead and see if we will nest list.
     let nextBlock = this.getNextBlock();
     if (
@@ -189,17 +259,20 @@ class MarkupGenerator {
       // This is a litle hacky: temporarily stash our current wrapperTag and
       // render child list(s).
       let thisWrapperTag = this.wrapperTag;
-      this.wrapperTag = null;
-      this.indentLevel += 1;
+      //this.wrapperTag = null;
+      //this.indentLevel += 1;
       this.currentBlock += 1;
-      this.processBlocksAtDepth(nextBlock.getDepth());
+      currentDepth = block.getDepth();
+      this.previousBlockDepth = this.currentBlockDepth;   
+      //this.processBlocksAtDepth(nextBlock.getDepth());
       this.wrapperTag = thisWrapperTag;
-      this.indentLevel -= 1;
-      this.indent();
+      //this.indentLevel -= 1;
+      //this.indent();
     } else {
       this.currentBlock += 1;
-    }
-    this.writeEndTag(blockType);
+      currentDepth = null;
+      this.previousBlockDepth = this.currentBlockDepth;   
+    }       
   }
 
   processBlocksAtDepth(depth: number) {
@@ -215,14 +288,18 @@ class MarkupGenerator {
     return this.blocks[this.currentBlock + 1];
   }
 
-  writeStartTag(blockType,blockData) {
+  writeStartTag(blockType,blockData,className) {
     let tags = getTags(blockType);
     let blockStyle="",blockAlign=blockData.get("textAlignment");
     if (blockAlign) {
       blockStyle="text-align:"+blockAlign+';'
     }
     for (let tag of tags) {
-      this.output.push(`<${tag} ${blockStyle?(" style='"+blockStyle+"'"):""}>`);
+      if(tag === 'li'){
+        this.output.push(`<${tag} ${blockStyle?(" style='"+blockStyle+"'"):""} ${className?(" class='"+className+"'"):""}>`);
+      }else{
+        this.output.push(`<${tag} ${blockStyle?(" style='"+blockStyle+"'"):""}>`);
+      }      
     }
   }
 
@@ -241,16 +318,16 @@ class MarkupGenerator {
 
   openWrapperTag(wrapperTag: string) {
     this.wrapperTag = wrapperTag;
-    this.indent();
+    //this.indent();
     this.output.push(`<${wrapperTag}>\n`);
-    this.indentLevel += 1;
+    //this.indentLevel += 1;
   }
 
   closeWrapperTag() {
     let {wrapperTag} = this;
     if (wrapperTag) {
-      this.indentLevel -= 1;
-      this.indent();
+      //this.indentLevel -= 1;
+      //this.indent();
       this.output.push(`</${wrapperTag}>\n`);
       this.wrapperTag = null;
     }
@@ -262,6 +339,8 @@ class MarkupGenerator {
 
   renderBlockContent(block: ContentBlock): string {
     let blockType = block.getType();
+    //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+    blockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(blockType);      
     let text = block.getText();
     if (text === '') {
       // Prevent element collapse if completely empty.
@@ -300,7 +379,7 @@ class MarkupGenerator {
       }).join('');
       let entity = entityKey ? Entity.get(entityKey) : null;
       // Note: The `toUpperCase` below is for compatability with some libraries that use lower-case for image blocks.
-      let entityType = (entity == null||!entity.getType()) ? null : entity.getType().toUpperCase();
+      let entityType = (entity == null||!DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(entity.getType())) ? null : DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(entity.getType()).toUpperCase();
       if (entityType != null && entityType === ENTITY_TYPE.LINK) {
         let attrs = DATA_TO_ATTR.hasOwnProperty(entityType) ? DATA_TO_ATTR[entityType](entityType, entity) : null;
         let attrString = stringifyAttrs(attrs);
@@ -362,6 +441,9 @@ function stringifyAttrs(attrs) {
 }
 
 function canHaveDepth(blockType: string): boolean {
+  //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+  blockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(blockType);    
+
   switch (blockType) {
     case BLOCK_TYPE.UNORDERED_LIST_ITEM:
     case BLOCK_TYPE.ORDERED_LIST_ITEM:
@@ -386,6 +468,77 @@ function encodeAttr(text: string): string {
     .split('<').join('&lt;')
     .split('>').join('&gt;')
     .split('"').join('&quot;');
+}
+
+function getListItemClasses(
+  type: string,
+  depth: number,
+  shouldResetCount: boolean,
+  direction: BidiDirection,
+  olulType: string,
+): string {
+  //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+  type = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(type);  
+
+  return cx({
+    'public/DraftStyleDefault/unorderedListItem':
+      type === 'unordered-list-item',
+    'public/DraftStyleDefault/orderedListItem':
+      type === 'ordered-list-item',
+    'public/DraftStyleDefault/reset': shouldResetCount,
+    'public/DraftStyleDefault/depth0': depth === 0,
+    'public/DraftStyleDefault/depth1': depth === 1,
+    'public/DraftStyleDefault/depth2': depth === 2,
+    'public/DraftStyleDefault/depth3': depth === 3,
+    'public/DraftStyleDefault/depth4': depth === 4,
+    'public/DraftStyleDefault/listLTR': direction === 'LTR',
+    'public/DraftStyleDefault/listRTL': direction === 'RTL',
+    'public/DraftStyleDefault/disc': olulType === 'disc',
+    'public/DraftStyleDefault/circle': olulType === 'circle',
+    'public/DraftStyleDefault/square': olulType === 'square',
+    'public/DraftStyleDefault/image': olulType === 'image',
+    'public/DraftStyleDefault/decimaltype1': olulType === 'decimalType1',
+    'public/DraftStyleDefault/decimaltype2': olulType === 'decimalType2',
+    'public/DraftStyleDefault/decimaltype3': olulType === 'decimalType3',
+  });
+}
+
+function getPreviousBlock(blocksAsArray,currentBlock) {
+  return blocksAsArray[currentBlock - 1]
+}
+
+function canHaveDepth(blockType: string): boolean {
+  //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+  blockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(blockType);  
+
+  switch (blockType) {
+    case 'unordered-list-item':
+    case 'ordered-list-item':
+      return true;
+    default:
+      return false;
+  }
+}
+
+function getBlockStyleNum(blockType: string): number {
+  switch (blockType) {
+    case 'unordered-list-item-disc':
+      return 0;
+    case 'unordered-list-item-circle':
+      return 1;
+    case 'unordered-list-item-square':
+      return 2;
+    case 'unordered-list-item-image':
+      return 3;
+    case 'ordered-list-item-decimal-type1':
+      return 0;
+    case 'ordered-list-item-decimal-type2':
+      return 1;
+    case 'ordered-list-item-decimal-type3':
+      return 2;
+    default:
+      return 0;
+  }
 }
 
 export default function stateToHTML(content: ContentState): string {

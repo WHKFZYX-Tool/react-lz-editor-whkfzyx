@@ -1,5 +1,7 @@
 'use strict';
 
+var _css = require('antd/lib/message/style/css');
+
 var _message = require('antd/lib/message');
 
 var _message2 = _interopRequireDefault(_message);
@@ -935,7 +937,7 @@ var commonFun = {
     log: function log(message) {
       var messageDiv = document.getElementById("messageDiv");
       if (!!messageDiv) {
-        messageDiv.innerHTML = message + "<br />" + messageDiv.innerHTML;
+        messageDiv.innerHTML = _message2.default + "<br />" + messageDiv.innerHTML;
       } else {
         var newEl = document.createElement('div');
         newEl.setAttribute('id', 'messageDiv');

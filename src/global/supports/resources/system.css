@@ -274,6 +274,9 @@
 .anticon-editor_u:before {
   content: "\eb15";
 }
+.anticon-editor_d:before {
+  content: "\ea28";
+}
 .anticon-editor_e:before {
   content: "\eb16";
 }

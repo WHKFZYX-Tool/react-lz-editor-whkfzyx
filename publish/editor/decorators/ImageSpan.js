@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _css = require('antd/lib/message/style/css');
+
 var _message = require('antd/lib/message');
 
 var _message2 = _interopRequireDefault(_message);
@@ -18,7 +20,7 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _draftJs = require('draft-js');
+var _draftJsWhkfzyx = require('draft-js-whkfzyx');
 
 var _decoratorStyle = require('./decoratorStyle.css');
 
@@ -40,7 +42,7 @@ var ImageSpan = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (ImageSpan.__proto__ || Object.getPrototypeOf(ImageSpan)).call(this, props));
 
-    var entity = _draftJs.Entity.get(_this.props.entityKey);
+    var entity = _draftJsWhkfzyx.Entity.get(_this.props.entityKey);
 
     var _entity$getData = entity.getData(),
         width = _entity$getData.width,
@@ -65,7 +67,7 @@ var ImageSpan = function (_Component) {
           width = _state.width,
           height = _state.height;
 
-      var entity = _draftJs.Entity.get(this.props.entityKey);
+      var entity = _draftJsWhkfzyx.Entity.get(this.props.entityKey);
       var image = new Image();
 
       var _entity$getData2 = entity.getData(),
@@ -77,7 +79,7 @@ var ImageSpan = function (_Component) {
       image.onload = function () {
         if (width == null || height == null) {
           _this2.setState({ width: image.width, height: image.height });
-          _draftJs.Entity.mergeData(_this2.props.entityKey, {
+          _draftJsWhkfzyx.Entity.mergeData(_this2.props.entityKey, {
             width: image.width,
             height: image.height,
             originalWidth: image.width,
@@ -96,7 +98,7 @@ var ImageSpan = function (_Component) {
           height = _state2.height;
 
       var key = this.props.entityKey;
-      var entity = _draftJs.Entity.get(key);
+      var entity = _draftJsWhkfzyx.Entity.get(key);
 
       var _entity$getData3 = entity.getData(),
           src = _entity$getData3.src;
@@ -135,7 +137,7 @@ var ImageSpan = function (_Component) {
       var pictureWidth = currentPicture.naturalWidth;
 
 
-      var editorState = _draftJs.EditorState.createEmpty();
+      var editorState = _draftJsWhkfzyx.EditorState.createEmpty();
       var selection = editorState.getSelection();
 
       var blockTree = editorState.getBlockTree(this.props.children[0].key);
@@ -154,7 +156,7 @@ var ImageSpan = function (_Component) {
           height = _data$size.height;
 
       this.setState({ width: width, height: height });
-      _draftJs.Entity.mergeData(this.props.entityKey, { width: width, height: height });
+      _draftJsWhkfzyx.Entity.mergeData(this.props.entityKey, { width: width, height: height });
     }
   }]);
 

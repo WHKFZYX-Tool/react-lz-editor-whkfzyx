@@ -1,4 +1,4 @@
-import {EditorState, SelectionState} from 'draft-js';
+import {EditorState, SelectionState} from 'draft-js-whkfzyx';
 
 import getSelectedBlocks from './getSelectedBlocks';
 

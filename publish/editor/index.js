@@ -1,12 +1,18 @@
 'use strict';
 
+var _css = require('antd/lib/modal/style/css');
+
 var _modal = require('antd/lib/modal');
 
 var _modal2 = _interopRequireDefault(_modal);
 
+var _css2 = require('antd/lib/input/style/css');
+
 var _input = require('antd/lib/input');
 
 var _input2 = _interopRequireDefault(_input);
+
+var _css3 = require('antd/lib/message/style/css');
 
 var _message = require('antd/lib/message');
 
@@ -26,7 +32,7 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _draftJs = require('draft-js');
+var _draftJsWhkfzyx = require('draft-js-whkfzyx');
 
 var _utils = require('./utils');
 
@@ -130,7 +136,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var decorator = new _draftJs.CompositeDecorator([_LinkDecorator2.default, _ImageDecorator2.default, _VideoDecorator2.default, _AudioDecorator2.default]);
+var decorator = new _draftJsWhkfzyx.CompositeDecorator([_LinkDecorator2.default, _ImageDecorator2.default, _VideoDecorator2.default, _AudioDecorator2.default]);
 
 var EditorConcist = function (_React$Component) {
   _inherits(EditorConcist, _React$Component);
@@ -156,7 +162,7 @@ var EditorConcist = function (_React$Component) {
         var originalString = _this.props.importContent;
         originalString = !originalString ? " " : originalString;
         if (!originalString) {
-          return _draftJs.EditorState.createEmpty(decorator);
+          return _draftJsWhkfzyx.EditorState.createEmpty(decorator);
         } else {
           var ConvertFormatProps = _this.props.convertFormat;
           var contentState = void 0;
@@ -168,11 +174,11 @@ var EditorConcist = function (_React$Component) {
             originalString = originalString.replace(/\s/g, "") ? originalString : "{}";
             var rawContent = JSON.parse(originalString);
             if ((0, _isEmpty2.default)(rawContent)) {
-              return _draftJs.EditorState.createWithContent("", decorator);
+              return _draftJsWhkfzyx.EditorState.createWithContent("", decorator);
             }
-            contentState = (0, _draftJs.convertFromRaw)(rawContent);
+            contentState = (0, _draftJsWhkfzyx.convertFromRaw)(rawContent);
           }
-          return _draftJs.EditorState.createWithContent(contentState, decorator);
+          return _draftJsWhkfzyx.EditorState.createWithContent(contentState, decorator);
         }
       }()
     };
@@ -193,7 +199,7 @@ var EditorConcist = function (_React$Component) {
         } else if (ConvertFormatProps === 'markdown') {
           content = (0, _utils.stateToMD)(rawContentState);
         } else if (ConvertFormatProps === 'raw') {
-          var rawContent = (0, _draftJs.convertToRaw)(rawContentState);
+          var rawContent = (0, _draftJsWhkfzyx.convertToRaw)(rawContentState);
           content = JSON.stringify(rawContent);
         }
         that.props.cbReceiver(content);
@@ -214,6 +220,7 @@ var EditorConcist = function (_React$Component) {
     };
     _this.customKeyBinding = _this._customKeyBinding.bind(_this);
     _this.handlePastedText = _this._handlePastedText.bind(_this);
+    _this.onTab = _this._onTab.bind(_this);
 
     _this.logState = function () {
       var content = _this.state.editorState.getCurrentContent();
@@ -307,10 +314,10 @@ var EditorConcist = function (_React$Component) {
         contentState = (0, _utils.stateFromMD)(newContent);
       } else if (ConvertFormatProps === 'raw') {
         var rawContent = JSON.parse(newContent);
-        contentState = (0, _draftJs.convertFromRaw)(rawContent);
+        contentState = (0, _draftJsWhkfzyx.convertFromRaw)(rawContent);
       }
 
-      var values = _draftJs.EditorState.createWithContent(contentState, decorator);
+      var values = _draftJsWhkfzyx.EditorState.createWithContent(contentState, decorator);
       this.state.editorState = values;
     }
   }, {
@@ -354,9 +361,9 @@ var EditorConcist = function (_React$Component) {
           editorState = _state.editorState,
           urlValue = _state.urlValue;
 
-      var entityKey = _draftJs.Entity.create('LINK', 'MUTABLE', { url: urlValue });
+      var entityKey = _draftJsWhkfzyx.Entity.create('LINK', 'MUTABLE', { url: urlValue });
       this.setState({
-        editorState: _draftJs.RichUtils.toggleLink(editorState, editorState.getSelection(), entityKey),
+        editorState: _draftJsWhkfzyx.RichUtils.toggleLink(editorState, editorState.getSelection(), entityKey),
         showURLInput: false,
         urlValue: ''
       }, function () {
@@ -380,7 +387,7 @@ var EditorConcist = function (_React$Component) {
       var selection = editorState.getSelection();
       if (!selection.isCollapsed()) {
         this.setState({
-          editorState: _draftJs.RichUtils.toggleLink(editorState, selection, null)
+          editorState: _draftJsWhkfzyx.RichUtils.toggleLink(editorState, selection, null)
         });
       } else {
         _message2.default.error(_i18n.lang[this.state.language].selectedLink, 5);
@@ -431,7 +438,7 @@ var EditorConcist = function (_React$Component) {
       var markdownContent = e.target.value;
 
       var contentState = (0, _utils.stateFromMD)(markdownContent);
-      var values = _draftJs.EditorState.createWithContent(contentState, decorator);
+      var values = _draftJsWhkfzyx.EditorState.createWithContent(contentState, decorator);
       this.state.tempSouceContent = markdownContent;
       this.state.editorState = values;
       this.forceUpdate();
@@ -441,7 +448,7 @@ var EditorConcist = function (_React$Component) {
     value: function _handleKeyCommand(command) {
       var editorState = this.state.editorState;
 
-      var newState = _draftJs.RichUtils.handleKeyCommand(editorState, command);
+      var newState = _draftJsWhkfzyx.RichUtils.handleKeyCommand(editorState, command);
       if (command === 'editor-save' && this.props.autoSave == true) {
 
         var rawContentState = editorState.getCurrentContent();
@@ -455,7 +462,7 @@ var EditorConcist = function (_React$Component) {
         } else if (ConvertFormatProps === 'markdown') {
           content = (0, _utils.stateToMD)(rawContentState);
         } else if (ConvertFormatProps === 'raw') {
-          var rawContent = (0, _draftJs.convertToRaw)(rawContentState);
+          var rawContent = (0, _draftJsWhkfzyx.convertToRaw)(rawContentState);
           content = JSON.stringify(rawContent);
         }
 
@@ -478,12 +485,12 @@ var EditorConcist = function (_React$Component) {
   }, {
     key: '_customKeyBinding',
     value: function _customKeyBinding(e) {
-      var hasCommandModifier = _draftJs.KeyBindingUtil.hasCommandModifier;
+      var hasCommandModifier = _draftJsWhkfzyx.KeyBindingUtil.hasCommandModifier;
 
       if (e.keyCode === 83 && hasCommandModifier(e)) {
         return 'editor-save';
       } else if (e.keyCode === 86 && hasCommandModifier(e)) {}
-      return (0, _draftJs.getDefaultKeyBinding)(e);
+      return (0, _draftJsWhkfzyx.getDefaultKeyBinding)(e);
     }
   }, {
     key: '_solidHtml',
@@ -532,18 +539,18 @@ var EditorConcist = function (_React$Component) {
       } else if (ConvertFormatProps === 'markdown') {
         content = (0, _utils.stateToMD)(rawContentState);
       } else if (ConvertFormatProps === 'raw') {
-        var rawContent = (0, _draftJs.convertToRaw)(rawContentState);
+        var rawContent = (0, _draftJsWhkfzyx.convertToRaw)(rawContentState);
         content = JSON.stringify(rawContent);
       }
 
       if (this.state.hasPasted === true || (0, _trim2.default)(newText).length > 0) {
-        var blockMap = _draftJs.ContentState.createFromText(text.trim()).blockMap;
-        var newState = _draftJs.Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap);
-        this.onChange(_draftJs.EditorState.push(editorState, newState, 'insert-fragment'));
+        var blockMap = _draftJsWhkfzyx.ContentState.createFromText(text.trim()).blockMap;
+        var newState = _draftJsWhkfzyx.Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap);
+        this.onChange(_draftJsWhkfzyx.EditorState.push(editorState, newState, 'insert-fragment'));
         return true;
       }
       this.state.hasPasted = true;
-      var decorator = new _draftJs.CompositeDecorator([_LinkDecorator2.default, _ImageDecorator2.default, _VideoDecorator2.default, _AudioDecorator2.default]);
+      var decorator = new _draftJsWhkfzyx.CompositeDecorator([_LinkDecorator2.default, _ImageDecorator2.default, _VideoDecorator2.default, _AudioDecorator2.default]);
       var contentState = "";
 
       if (ConvertFormatProps === 'html') {
@@ -551,10 +558,10 @@ var EditorConcist = function (_React$Component) {
       } else if (ConvertFormatProps === 'markdown') {
         contentState = (0, _utils.stateFromMD)(sourceString);
       } else if (ConvertFormatProps === 'raw') {
-        contentState = (0, _draftJs.convertFromRaw)(sourceString);
+        contentState = (0, _draftJsWhkfzyx.convertFromRaw)(sourceString);
       }
 
-      var values = _draftJs.EditorState.createWithContent(contentState, decorator);
+      var values = _draftJsWhkfzyx.EditorState.createWithContent(contentState, decorator);
       this.state.editorState = values;
       _message2.default.success(_i18n.lang[this.state.language].successPasteCleanText, 5);
       this.forceUpdate();
@@ -563,7 +570,16 @@ var EditorConcist = function (_React$Component) {
   }, {
     key: '_toggleBlockType',
     value: function _toggleBlockType(blockType) {
-      this.onChange(_draftJs.RichUtils.toggleBlockType(this.state.editorState, blockType));
+      this.onChange(_draftJsWhkfzyx.RichUtils.toggleBlockType(this.state.editorState, blockType));
+    }
+  }, {
+    key: '_onTab',
+    value: function _onTab(e) {
+      var maxDepth = 4;
+      var editorState = _draftJsWhkfzyx.RichUtils.onTab(e, this.state.editorState, maxDepth);
+      this.setState({
+        editorState: editorState
+      });
     }
   }, {
     key: '_toggleAlignment',
@@ -573,7 +589,7 @@ var EditorConcist = function (_React$Component) {
   }, {
     key: '_toggleInlineStyle',
     value: function _toggleInlineStyle(inlineStyle) {
-      this.onChange(_draftJs.RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle));
+      this.onChange(_draftJsWhkfzyx.RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle));
     }
   }, {
     key: '_addMedia',
@@ -583,8 +599,8 @@ var EditorConcist = function (_React$Component) {
         throw new Error(_i18n.lang[this.state.language].errorUploadingFile);
         return false;
       }
-      var entityKey = _draftJs.Entity.create(type, 'IMMUTABLE', { src: src });
-      return _draftJs.AtomicBlockUtils.insertAtomicBlock(this.state.editorState, entityKey, ' ');
+      var entityKey = _draftJsWhkfzyx.Entity.create(type, 'IMMUTABLE', { src: src });
+      return _draftJsWhkfzyx.AtomicBlockUtils.insertAtomicBlock(this.state.editorState, entityKey, ' ');
     }
   }, {
     key: '_addAudio',
@@ -623,7 +639,7 @@ var EditorConcist = function (_React$Component) {
   }, {
     key: '_pasteNoStyle',
     value: function _pasteNoStyle(sourceString) {
-      var decorator = new _draftJs.CompositeDecorator([_LinkDecorator2.default, _ImageDecorator2.default, _VideoDecorator2.default, _AudioDecorator2.default]);
+      var decorator = new _draftJsWhkfzyx.CompositeDecorator([_LinkDecorator2.default, _ImageDecorator2.default, _VideoDecorator2.default, _AudioDecorator2.default]);
       var contentState = "";
 
       var ConvertFormatProps = this.props.convertFormat;
@@ -633,10 +649,10 @@ var EditorConcist = function (_React$Component) {
       } else if (ConvertFormatProps === 'markdown') {
         contentState = (0, _utils.stateFromMD)(sourceString);
       } else if (ConvertFormatProps === 'raw') {
-        contentState = (0, _draftJs.convertFromRaw)(sourceString);
+        contentState = (0, _draftJsWhkfzyx.convertFromRaw)(sourceString);
       }
 
-      var values = _draftJs.EditorState.createWithContent(contentState, decorator);
+      var values = _draftJsWhkfzyx.EditorState.createWithContent(contentState, decorator);
       this.state.editorState = values;
       this.forceUpdate();
     }
@@ -646,9 +662,9 @@ var EditorConcist = function (_React$Component) {
       if (this.state.editorState) {
         var newEditorState = null;
         if (type == "undo") {
-          newEditorState = _draftJs.EditorState.undo(this.state.editorState);
+          newEditorState = _draftJsWhkfzyx.EditorState.undo(this.state.editorState);
         } else {
-          newEditorState = _draftJs.EditorState.redo(this.state.editorState);
+          newEditorState = _draftJsWhkfzyx.EditorState.redo(this.state.editorState);
         }
         this.setState({ editorState: newEditorState });
       }
@@ -663,19 +679,19 @@ var EditorConcist = function (_React$Component) {
       var styles = editorState.getCurrentInlineStyle();
 
       var removeStyles = styles.reduce(function (state, style) {
-        return _draftJs.Modifier.removeInlineStyle(state, selection, style);
+        return _draftJsWhkfzyx.Modifier.removeInlineStyle(state, selection, style);
       }, contentState);
 
-      var removeBlock = _draftJs.Modifier.setBlockType(removeStyles, selection, 'unstyled');
+      var removeBlock = _draftJsWhkfzyx.Modifier.setBlockType(removeStyles, selection, 'unstyled');
 
       this.setState({
-        editorState: _draftJs.EditorState.push(editorState, removeBlock)
+        editorState: _draftJsWhkfzyx.EditorState.push(editorState, removeBlock)
       });
     }
   }, {
     key: '_choiceAutoSave',
     value: function _choiceAutoSave(savedImportContent) {
-      var decorator = new _draftJs.CompositeDecorator([_LinkDecorator2.default, _ImageDecorator2.default, _VideoDecorator2.default, _AudioDecorator2.default]);
+      var decorator = new _draftJsWhkfzyx.CompositeDecorator([_LinkDecorator2.default, _ImageDecorator2.default, _VideoDecorator2.default, _AudioDecorator2.default]);
       var ConvertFormatProps = this.props.convertFormat;
       var contentState = "";
       if (ConvertFormatProps === 'html') {
@@ -684,10 +700,10 @@ var EditorConcist = function (_React$Component) {
         contentState = (0, _utils.stateFromMD)(savedImportContent);
       } else if (ConvertFormatProps === 'raw') {
         var rawContent = JSON.parse(savedImportContent);
-        contentState = (0, _draftJs.convertFromRaw)(rawContent);
+        contentState = (0, _draftJsWhkfzyx.convertFromRaw)(rawContent);
       }
 
-      var values = _draftJs.EditorState.createWithContent(contentState, decorator);
+      var values = _draftJsWhkfzyx.EditorState.createWithContent(contentState, decorator);
       this.state.editorState = values;
       this.forceUpdate();
     }
@@ -699,20 +715,20 @@ var EditorConcist = function (_React$Component) {
       var selection = editorState.getSelection();
 
       var nextContentState = Object.keys(_colorConfig.colorStyleMap).reduce(function (contentState, color) {
-        return _draftJs.Modifier.removeInlineStyle(contentState, selection, color);
+        return _draftJsWhkfzyx.Modifier.removeInlineStyle(contentState, selection, color);
       }, editorState.getCurrentContent());
 
-      var nextEditorState = _draftJs.EditorState.push(editorState, nextContentState, 'change-inline-style');
+      var nextEditorState = _draftJsWhkfzyx.EditorState.push(editorState, nextContentState, 'change-inline-style');
       var currentStyle = editorState.getCurrentInlineStyle();
 
       if (selection.isCollapsed()) {
         nextEditorState = currentStyle.reduce(function (state, color) {
-          return _draftJs.RichUtils.toggleInlineStyle(state, color);
+          return _draftJsWhkfzyx.RichUtils.toggleInlineStyle(state, color);
         }, nextEditorState);
       }
 
       if (!currentStyle.has(toggledColor)) {
-        nextEditorState = _draftJs.RichUtils.toggleInlineStyle(nextEditorState, toggledColor);
+        nextEditorState = _draftJsWhkfzyx.RichUtils.toggleInlineStyle(nextEditorState, toggledColor);
       }
 
       this.onChange(nextEditorState);
@@ -785,12 +801,12 @@ var EditorConcist = function (_React$Component) {
         _react2.default.createElement(
           'div',
           { className: className, onClick: this.focus, style: { display: this.state.showMarkdownSource == true ? "none" : "block" } },
-          _react2.default.createElement(_draftJs.Editor, (_React$createElement = {
+          _react2.default.createElement(_draftJsWhkfzyx.Editor, (_React$createElement = {
             blockRendererFn: mediaBlockRenderer,
             editorState: this.state.editorState,
             blockStyleFn: getBlockStyle,
             customStyleMap: styleMap
-          }, _defineProperty(_React$createElement, 'customStyleMap', _colorConfig.colorStyleMap), _defineProperty(_React$createElement, 'editorState', editorState), _defineProperty(_React$createElement, 'handleKeyCommand', this.handleKeyCommand), _defineProperty(_React$createElement, 'keyBindingFn', this.customKeyBinding), _defineProperty(_React$createElement, 'onChange', this.onChange), _defineProperty(_React$createElement, 'handlePastedText', this.handlePastedText), _defineProperty(_React$createElement, 'spellCheck', true), _React$createElement))
+          }, _defineProperty(_React$createElement, 'customStyleMap', _colorConfig.colorStyleMap), _defineProperty(_React$createElement, 'editorState', editorState), _defineProperty(_React$createElement, 'handleKeyCommand', this.handleKeyCommand), _defineProperty(_React$createElement, 'keyBindingFn', this.customKeyBinding), _defineProperty(_React$createElement, 'onChange', this.onChange), _defineProperty(_React$createElement, 'onTab', this.onTab), _defineProperty(_React$createElement, 'handlePastedText', this.handlePastedText), _defineProperty(_React$createElement, 'spellCheck', true), _React$createElement))
         ),
         _react2.default.createElement(
           'div',
@@ -878,7 +894,7 @@ var Video = function Video(props) {
 };
 
 var Media = function Media(props) {
-  var entity = _draftJs.Entity.get(props.block.getEntityAt(0));
+  var entity = _draftJsWhkfzyx.Entity.get(props.block.getEntityAt(0));
 
   var _entity$getData = entity.getData(),
       src = _entity$getData.src;

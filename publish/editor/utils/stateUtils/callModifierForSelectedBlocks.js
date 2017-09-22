@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _draftJs = require('draft-js');
+var _draftJsWhkfzyx = require('draft-js-whkfzyx');
 
 var _getSelectedBlocks = require('./getSelectedBlocks');
 
@@ -45,7 +45,7 @@ exports.default = function (editorState, modifier) {
       selectionEnd = block.getText().length;
     }
 
-    var selection = new _draftJs.SelectionState({
+    var selection = new _draftJsWhkfzyx.SelectionState({
       anchorKey: currentBlockKey,
       anchorOffset: selectionStart,
       focusKey: currentBlockKey,
@@ -55,5 +55,5 @@ exports.default = function (editorState, modifier) {
     finalEditorState = modifier.apply(undefined, [finalEditorState, selection].concat(args));
   });
 
-  return _draftJs.EditorState.forceSelection(finalEditorState, currentSelection);
+  return _draftJsWhkfzyx.EditorState.forceSelection(finalEditorState, currentSelection);
 };

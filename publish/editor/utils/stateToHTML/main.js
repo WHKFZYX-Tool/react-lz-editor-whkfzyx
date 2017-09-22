@@ -12,11 +12,17 @@ var _ENTITY_ATTR_MAP, _DATA_TO_ATTR;
 
 exports.default = stateToHTML;
 
-var _draftJs = require('draft-js');
+var _draftJsWhkfzyx = require('draft-js-whkfzyx');
 
 var _main = require('../stateUtils/main');
 
 var _colorConfig = require('../colorConfig');
+
+var _DraftBlockTypeAnalysis = require('../DraftBlockTypeAnalysis');
+
+var _DraftBlockTypeAnalysis2 = _interopRequireDefault(_DraftBlockTypeAnalysis);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -31,6 +37,8 @@ var BOLD = _main.INLINE_STYLE.BOLD,
 
 var INDENT = '  ';
 var BREAK = '<br>';
+var cx = require('fbjs/lib/cx');
+var joinClasses = require('fbjs/lib/joinClasses');
 
 var ENTITY_ATTR_MAP = (_ENTITY_ATTR_MAP = {}, _defineProperty(_ENTITY_ATTR_MAP, _main.ENTITY_TYPE.LINK, { url: 'href', rel: 'rel', target: 'target', title: 'title', className: 'class' }), _defineProperty(_ENTITY_ATTR_MAP, _main.ENTITY_TYPE.IMAGE, { src: 'src', height: 'height', width: 'width', alt: 'alt', className: 'class' }), _defineProperty(_ENTITY_ATTR_MAP, _main.ENTITY_TYPE.VIDEO, { src: 'src', controls: 'controls', height: 'height', width: 'width', alt: 'alt', className: 'class' }), _defineProperty(_ENTITY_ATTR_MAP, _main.ENTITY_TYPE.AUDIO, { src: 'src', controls: 'controls', height: 'height', width: 'width', alt: 'alt', className: 'class' }), _ENTITY_ATTR_MAP);
 
@@ -175,6 +183,8 @@ var DATA_TO_ATTR = (_DATA_TO_ATTR = {}, _defineProperty(_DATA_TO_ATTR, _main.ENT
 }), _DATA_TO_ATTR);
 
 function getTags(blockType) {
+  blockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(blockType);
+
   switch (blockType) {
     case _main.BLOCK_TYPE.HEADER_ONE:
       return ['h1'];
@@ -202,6 +212,8 @@ function getTags(blockType) {
 }
 
 function getWrapperTag(blockType) {
+  blockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(blockType);
+
   switch (blockType) {
     case _main.BLOCK_TYPE.UNORDERED_LIST_ITEM:
       return 'ul';
@@ -226,8 +238,15 @@ var MarkupGenerator = function () {
       this.blocks = this.contentState.getBlocksAsArray();
       this.totalBlocks = this.blocks.length;
       this.currentBlock = 0;
-      this.indentLevel = 0;
+
       this.wrapperTag = null;
+
+      this.maxLiDepth = 0;
+      this.previousBlockLastDepth = null;
+      this.currentBlockDepth = null;
+      this.previousBlockDepth = null;
+      this.currentBlockStyleNum = 0;
+
       while (this.currentBlock < this.totalBlocks) {
         this.processBlock();
       }
@@ -239,6 +258,10 @@ var MarkupGenerator = function () {
     value: function processBlock() {
       var block = this.blocks[this.currentBlock];
       var blockType = block.getType();
+
+      blockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(blockType);
+      var realBlockType = block.getType();
+      var currentDepth = null;
       var blockData = block.getData();
       var newWrapperTag = getWrapperTag(blockType);
       if (this.wrapperTag !== newWrapperTag) {
@@ -249,26 +272,67 @@ var MarkupGenerator = function () {
           this.openWrapperTag(newWrapperTag);
         }
       }
-      this.indent();
-      this.writeStartTag(blockType, blockData);
+
+
+      var depth = block.getDepth();
+
+      var previousBlock = getPreviousBlock(this.blocks, this.currentBlock);
+      var previousBlockType = null;
+      var realPreviousBlockType = null;
+      if (previousBlock) {
+        previousBlockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(previousBlock.getType());
+        realPreviousBlockType = previousBlock.getType();
+      }
+
+      if (!canHaveDepth(previousBlockType) && canHaveDepth(blockType)) {
+        this.maxLiDepth = 0;
+        this.previousBlockLastDepth = null;
+        this.currentBlockDepth = null;
+        this.previousBlockDepth = null;
+      }
+
+      this.currentBlockDepth = depth;
+
+      if (canHaveDepth(blockType) && canHaveDepth(previousBlockType) && blockType !== previousBlockType) {
+        this.previousBlockLastDepth = this.maxLiDepth;
+      }
+
+      if (this.previousBlockLastDepth !== null && this.previousBlockLastDepth + depth > this.currentBlockDepth) {
+        this.currentBlockDepth = this.previousBlockLastDepth + depth > 4 ? 4 : this.previousBlockLastDepth + depth;
+      }
+
+      if (realBlockType !== realPreviousBlockType) {
+        this.currentBlockStyleNum = getBlockStyleNum(realBlockType);
+      } else {
+        if (this.previousBlockDepth !== null && this.previousBlockDepth !== this.currentBlockDepth) {
+          this.currentBlockStyleNum += 1;
+        }
+      }
+
+      var olulType = blockType === 'unordered-list-item' ? _DraftBlockTypeAnalysis2.default.getUlStyleType(this.currentBlockStyleNum) : _DraftBlockTypeAnalysis2.default.getOlStyleType(this.currentBlockStyleNum);
+
+      var shouldResetCount = this.wrapperTag !== newWrapperTag || currentDepth === null || block.getDepth() > currentDepth;
+      var className = getListItemClasses(blockType, this.currentBlockDepth, shouldResetCount, 'LTR', olulType);
+      this.writeStartTag(blockType, blockData, className);
       this.output.push(this.renderBlockContent(block));
+      this.writeEndTag(blockType);
 
       var nextBlock = this.getNextBlock();
       if (canHaveDepth(blockType) && nextBlock && nextBlock.getDepth() === block.getDepth() + 1) {
         this.output.push('\n');
 
         var thisWrapperTag = this.wrapperTag;
-        this.wrapperTag = null;
-        this.indentLevel += 1;
+
         this.currentBlock += 1;
-        this.processBlocksAtDepth(nextBlock.getDepth());
+        currentDepth = block.getDepth();
+        this.previousBlockDepth = this.currentBlockDepth;
+
         this.wrapperTag = thisWrapperTag;
-        this.indentLevel -= 1;
-        this.indent();
       } else {
         this.currentBlock += 1;
+        currentDepth = null;
+        this.previousBlockDepth = this.currentBlockDepth;
       }
-      this.writeEndTag(blockType);
     }
   }, {
     key: 'processBlocksAtDepth',
@@ -287,7 +351,7 @@ var MarkupGenerator = function () {
     }
   }, {
     key: 'writeStartTag',
-    value: function writeStartTag(blockType, blockData) {
+    value: function writeStartTag(blockType, blockData, className) {
       var tags = getTags(blockType);
       var blockStyle = "",
           blockAlign = blockData.get("textAlignment");
@@ -302,7 +366,11 @@ var MarkupGenerator = function () {
         for (var _iterator5 = tags[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
           var tag = _step5.value;
 
-          this.output.push('<' + tag + ' ' + (blockStyle ? " style='" + blockStyle + "'" : "") + '>');
+          if (tag === 'li') {
+            this.output.push('<' + tag + ' ' + (blockStyle ? " style='" + blockStyle + "'" : "") + ' ' + (className ? " class='" + className + "'" : "") + '>');
+          } else {
+            this.output.push('<' + tag + ' ' + (blockStyle ? " style='" + blockStyle + "'" : "") + '>');
+          }
         }
       } catch (err) {
         _didIteratorError5 = true;
@@ -359,9 +427,8 @@ var MarkupGenerator = function () {
     key: 'openWrapperTag',
     value: function openWrapperTag(wrapperTag) {
       this.wrapperTag = wrapperTag;
-      this.indent();
+
       this.output.push('<' + wrapperTag + '>\n');
-      this.indentLevel += 1;
     }
   }, {
     key: 'closeWrapperTag',
@@ -369,8 +436,6 @@ var MarkupGenerator = function () {
       var wrapperTag = this.wrapperTag;
 
       if (wrapperTag) {
-        this.indentLevel -= 1;
-        this.indent();
         this.output.push('</' + wrapperTag + '>\n');
         this.wrapperTag = null;
       }
@@ -384,6 +449,8 @@ var MarkupGenerator = function () {
     key: 'renderBlockContent',
     value: function renderBlockContent(block) {
       var blockType = block.getType();
+
+      blockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(blockType);
       var text = block.getText();
       if (text === '') {
         return BREAK;
@@ -425,9 +492,9 @@ var MarkupGenerator = function () {
           }
           return content;
         }).join('');
-        var entity = entityKey ? _draftJs.Entity.get(entityKey) : null;
+        var entity = entityKey ? _draftJsWhkfzyx.Entity.get(entityKey) : null;
 
-        var entityType = entity == null || !entity.getType() ? null : entity.getType().toUpperCase();
+        var entityType = entity == null || !_DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(entity.getType()) ? null : _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(entity.getType()).toUpperCase();
         if (entityType != null && entityType === _main.ENTITY_TYPE.LINK) {
           var attrs = DATA_TO_ATTR.hasOwnProperty(entityType) ? DATA_TO_ATTR[entityType](entityType, entity) : null;
           var attrString = stringifyAttrs(attrs);
@@ -511,6 +578,8 @@ function stringifyAttrs(attrs) {
 }
 
 function canHaveDepth(blockType) {
+  blockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(blockType);
+
   switch (blockType) {
     case _main.BLOCK_TYPE.UNORDERED_LIST_ITEM:
     case _main.BLOCK_TYPE.ORDERED_LIST_ITEM:
@@ -526,6 +595,67 @@ function encodeContent(text) {
 
 function encodeAttr(text) {
   return text.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split('"').join('&quot;');
+}
+
+function getListItemClasses(type, depth, shouldResetCount, direction, olulType) {
+  type = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(type);
+
+  return cx({
+    'public/DraftStyleDefault/unorderedListItem': type === 'unordered-list-item',
+    'public/DraftStyleDefault/orderedListItem': type === 'ordered-list-item',
+    'public/DraftStyleDefault/reset': shouldResetCount,
+    'public/DraftStyleDefault/depth0': depth === 0,
+    'public/DraftStyleDefault/depth1': depth === 1,
+    'public/DraftStyleDefault/depth2': depth === 2,
+    'public/DraftStyleDefault/depth3': depth === 3,
+    'public/DraftStyleDefault/depth4': depth === 4,
+    'public/DraftStyleDefault/listLTR': direction === 'LTR',
+    'public/DraftStyleDefault/listRTL': direction === 'RTL',
+    'public/DraftStyleDefault/disc': olulType === 'disc',
+    'public/DraftStyleDefault/circle': olulType === 'circle',
+    'public/DraftStyleDefault/square': olulType === 'square',
+    'public/DraftStyleDefault/image': olulType === 'image',
+    'public/DraftStyleDefault/decimaltype1': olulType === 'decimalType1',
+    'public/DraftStyleDefault/decimaltype2': olulType === 'decimalType2',
+    'public/DraftStyleDefault/decimaltype3': olulType === 'decimalType3'
+  });
+}
+
+function getPreviousBlock(blocksAsArray, currentBlock) {
+  return blocksAsArray[currentBlock - 1];
+}
+
+function canHaveDepth(blockType) {
+  blockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(blockType);
+
+  switch (blockType) {
+    case 'unordered-list-item':
+    case 'ordered-list-item':
+      return true;
+    default:
+      return false;
+  }
+}
+
+function getBlockStyleNum(blockType) {
+  switch (blockType) {
+    case 'unordered-list-item-disc':
+      return 0;
+    case 'unordered-list-item-circle':
+      return 1;
+    case 'unordered-list-item-square':
+      return 2;
+    case 'unordered-list-item-image':
+      return 3;
+    case 'ordered-list-item-decimal-type1':
+      return 0;
+    case 'ordered-list-item-decimal-type2':
+      return 1;
+    case 'ordered-list-item-decimal-type3':
+      return 2;
+    default:
+      return 0;
+  }
 }
 
 function stateToHTML(content) {

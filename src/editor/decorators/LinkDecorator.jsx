@@ -1,9 +1,9 @@
 /* @flow */
 import React from 'react';
-import {Entity} from 'draft-js';
+import {Entity} from 'draft-js-whkfzyx';
 import {ENTITY_TYPE} from '../utils/stateUtils/main';
 
-import type {ContentBlock} from 'draft-js';
+import type {ContentBlock} from 'draft-js-whkfzyx';
 
 // TODO: Use a more specific type here.
 type ReactNode = any;

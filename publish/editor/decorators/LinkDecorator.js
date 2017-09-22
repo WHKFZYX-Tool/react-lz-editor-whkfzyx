@@ -8,14 +8,14 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _draftJs = require('draft-js');
+var _draftJsWhkfzyx = require('draft-js-whkfzyx');
 
 var _main = require('../utils/stateUtils/main');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function Link(props_) {
-  var _Entity$get$getData = _draftJs.Entity.get(props_.entityKey).getData(),
+  var _Entity$get$getData = _draftJsWhkfzyx.Entity.get(props_.entityKey).getData(),
       url = _Entity$get$getData.url;
 
   return _react2.default.createElement(
@@ -28,7 +28,7 @@ function Link(props_) {
 function findLinkEntities(contentBlock, callback) {
   contentBlock.findEntityRanges(function (character) {
     var entityKey = character.getEntity();
-    return entityKey != null && _draftJs.Entity.get(entityKey).getType() === _main.ENTITY_TYPE.LINK;
+    return entityKey != null && _draftJsWhkfzyx.Entity.get(entityKey).getType() === _main.ENTITY_TYPE.LINK;
   }, callback);
 }
 

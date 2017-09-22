@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ALIGNMENT_DATA_KEY = exports.ALIGNMENTS = undefined;
 
-var _draftJs = require('draft-js');
+var _draftJsWhkfzyx = require('draft-js-whkfzyx');
 
 var _getCurrentlySelectedBlock = require('./getCurrentlySelectedBlock');
 
@@ -22,7 +22,7 @@ var ALIGNMENTS = exports.ALIGNMENTS = {
 
 var ALIGNMENT_DATA_KEY = exports.ALIGNMENT_DATA_KEY = 'textAlignment';
 
-var ExtendedRichUtils = Object.assign({}, _draftJs.RichUtils, {
+var ExtendedRichUtils = Object.assign({}, _draftJsWhkfzyx.RichUtils, {
 	toggleAlignment: function toggleAlignment(editorState, alignment) {
 		var _getCurrentlySelected = (0, _getCurrentlySelectedBlock2.default)(editorState),
 		    content = _getCurrentlySelected.content,
@@ -43,13 +43,13 @@ var ExtendedRichUtils = Object.assign({}, _draftJs.RichUtils, {
 		var alignBlockData = new Map();
 		alignBlockData.set(ALIGNMENT_DATA_KEY, alignmentToSet);
 
-		var newBlockData = _draftJs.Modifier.setBlockData(content, target, alignBlockData);
+		var newBlockData = _draftJsWhkfzyx.Modifier.setBlockData(content, target, alignBlockData);
 
-		return _draftJs.EditorState.push(editorState, newBlockData, 'change-block-type');
+		return _draftJsWhkfzyx.EditorState.push(editorState, newBlockData, 'change-block-type');
 	},
 	splitBlock: function splitBlock(editorState) {
-		var contentState = _draftJs.Modifier.splitBlock(editorState.getCurrentContent(), editorState.getSelection());
-		var splitState = _draftJs.EditorState.push(editorState, contentState, 'split-block');
+		var contentState = _draftJsWhkfzyx.Modifier.splitBlock(editorState.getCurrentContent(), editorState.getSelection());
+		var splitState = _draftJsWhkfzyx.EditorState.push(editorState, contentState, 'split-block');
 
 		var _getCurrentlySelected2 = (0, _getCurrentlySelectedBlock2.default)(editorState),
 		    currentBlock = _getCurrentlySelected2.currentBlock;

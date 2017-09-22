@@ -8,7 +8,7 @@ var _VideoSpan = require('./VideoSpan');
 
 var _VideoSpan2 = _interopRequireDefault(_VideoSpan);
 
-var _draftJs = require('draft-js');
+var _draftJsWhkfzyx = require('draft-js-whkfzyx');
 
 var _main = require('../utils/stateUtils/main');
 
@@ -17,7 +17,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function findVideoEntities(contentBlock, callback) {
   contentBlock.findEntityRanges(function (character) {
     var entityKey = character.getEntity();
-    return entityKey != null && _draftJs.Entity.get(entityKey).getType() === _main.ENTITY_TYPE.VIDEO;
+    return entityKey != null && _draftJsWhkfzyx.Entity.get(entityKey).getType() === _main.ENTITY_TYPE.VIDEO;
   }, callback);
 }
 

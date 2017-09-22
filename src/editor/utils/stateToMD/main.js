@@ -6,9 +6,11 @@ import {
   ENTITY_TYPE,
   INLINE_STYLE,
 } from '../stateUtils/main';
-import {Entity} from 'draft-js';
+import {Entity} from 'draft-js-whkfzyx';
 
-import type {ContentState, ContentBlock} from 'draft-js';
+import type {ContentState, ContentBlock} from 'draft-js-whkfzyx';
+
+import DraftBlockTypeAnalysis from '../DraftBlockTypeAnalysis'
 
 const {
   BOLD,
@@ -47,6 +49,9 @@ class MarkupGenerator {
   processBlock() {
     let block = this.blocks[this.currentBlock];
     let blockType = block.getType();
+    //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+    blockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(blockType); 
+
     switch (blockType) {
       case BLOCK_TYPE.HEADER_ONE: {
         this.insertLineBreaks(1);
@@ -82,6 +87,8 @@ class MarkupGenerator {
         let blockDepth = block.getDepth();
         let lastBlock = this.getLastBlock();
         let lastBlockType = lastBlock ? lastBlock.getType() : null;
+        //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+        lastBlockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(lastBlockType);         
         let lastBlockDepth = lastBlock && canHaveDepth(lastBlockType) ?
           lastBlock.getDepth() :
           null;
@@ -105,6 +112,8 @@ class MarkupGenerator {
         let blockDepth = block.getDepth();
         let lastBlock = this.getLastBlock();
         let lastBlockType = lastBlock ? lastBlock.getType() : null;
+        //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+        lastBlockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(lastBlockType);           
         let lastBlockDepth = lastBlock && canHaveDepth(lastBlockType) ?
           lastBlock.getDepth() :
           null;
@@ -152,6 +161,8 @@ class MarkupGenerator {
 
   getListItemCount(block: ContentBlock): number {
     let blockType = block.getType();
+    //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+    blockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(blockType);       
     let blockDepth = block.getDepth();
     // To decide if we need to start over we need to backtrack (skipping list
     // items that are of greater depth)
@@ -167,7 +178,7 @@ class MarkupGenerator {
     }
     if (
       !prevBlock ||
-      prevBlock.getType() !== blockType ||
+      DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(prevBlock.getType()) !== blockType ||
       prevBlock.getDepth() !== blockDepth
     ) {
       this.listItemCounts[blockDepth] = 0;
@@ -185,6 +196,8 @@ class MarkupGenerator {
 
   renderBlockContent(block: ContentBlock): string {
     let blockType = block.getType();
+    //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+    blockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(blockType);          
     let text = block.getText();
     if (text === '') {
       // Prevent element collapse if completely empty.
@@ -220,12 +233,12 @@ class MarkupGenerator {
         return content;
       }).join('');
       let entity = entityKey ? Entity.get(entityKey) : null;
-      if (entity != null && entity.getType() === ENTITY_TYPE.LINK) {
+      if (entity != null && DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(entity.getType()) === ENTITY_TYPE.LINK) {
         let data = entity.getData();
         let url = data.url || '';
         let title = data.title ? ` "${escapeTitle(data.title)}"` : '';
         return `[${content}](${encodeURL(url)}${title})`;
-      } else if (entity != null && entity.getType() === ENTITY_TYPE.IMAGE) {
+      } else if (entity != null && DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(entity.getType()) === ENTITY_TYPE.IMAGE) {
         let data = entity.getData();
         let src = data.src || '';
         let alt = data.alt ? ` "${escapeTitle(data.alt)}"` : '';
@@ -238,6 +251,9 @@ class MarkupGenerator {
 }
 
 function canHaveDepth(blockType: any): boolean {
+  //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+  blockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(blockType);    
+
   switch (blockType) {
     case BLOCK_TYPE.UNORDERED_LIST_ITEM:
     case BLOCK_TYPE.ORDERED_LIST_ITEM:

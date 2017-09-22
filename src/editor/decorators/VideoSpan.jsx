@@ -2,7 +2,7 @@
 
 // import autobind from 'class-autobind';
 import React, {Component} from 'react';
-import {Entity} from 'draft-js';
+import {Entity} from 'draft-js-whkfzyx';
 
 // $FlowIssue - Flow doesn't understand CSS Modules
 import styles from './decoratorStyle.css';

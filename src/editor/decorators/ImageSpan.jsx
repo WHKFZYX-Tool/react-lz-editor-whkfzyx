@@ -3,7 +3,7 @@
 // import autobind from 'class-autobind';
 import React, {Component} from 'react';
 import ReactDom from 'react-dom';
-import {Entity,EditorState} from 'draft-js';
+import {Entity,EditorState} from 'draft-js-whkfzyx';
 import {message} from 'antd';
 
 // $FlowIssue - Flow doesn't understand CSS Modules
