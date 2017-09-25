@@ -1,11 +1,13 @@
-@import "custom.css";
 @font-face {
   font-family: 'anticon';
   src: url('default/iconfont.eot');
   /* IE9*/
-  src: url('default/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('default/iconfont.woff') format('woff'), /* chrome、firefox */ url('default/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/ url('default/iconfont.svg#iconfont') format('svg');
-  /* iOS 4.1- */
+  src: url('default/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ 
+  url('default/iconfont.woff') format('woff'), /* chrome、firefox */ 
+  url('default/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/ 
+  url('default/iconfont.svg#iconfont') format('svg');/* iOS 4.1- */
 }
+
 .anticon {
   display: inline-block;
   font-style: normal;
@@ -275,7 +277,7 @@
   content: "\eb15";
 }
 .anticon-editor_d:before {
-  content: "\ea28";
+  content: "\e620";
 }
 .anticon-editor_e:before {
   content: "\eb16";

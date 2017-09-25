@@ -1,12 +1,16 @@
-"use strict";
+'use strict';
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _styleButton = require("./styleButton");
+var _styleButton = require('./styleButton');
 
 var _styleButton2 = _interopRequireDefault(_styleButton);
+
+var _DraftBlockTypeAnalysis = require('../utils/DraftBlockTypeAnalysis');
+
+var _DraftBlockTypeAnalysis2 = _interopRequireDefault(_DraftBlockTypeAnalysis);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15,7 +19,9 @@ var BlockStyleControls = function BlockStyleControls(props) {
       lang = props.lang;
 
   var selection = editorState.getSelection();
-  var blockType = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
+
+  var blockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType());
+
   var BLOCK_TYPES = [{
     text: lang.H1,
     label: "editor_H1",
@@ -50,8 +56,8 @@ var BlockStyleControls = function BlockStyleControls(props) {
     style: 'code-block'
   }];
   return _react2.default.createElement(
-    "div",
-    { className: "RichEditor-controls" },
+    'div',
+    { className: 'RichEditor-controls' },
     BLOCK_TYPES.map(function (type, i) {
       var button = _react2.default.createElement(_styleButton2.default, {
         key: type.style,

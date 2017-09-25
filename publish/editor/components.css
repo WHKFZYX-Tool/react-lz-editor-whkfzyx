@@ -114,7 +114,7 @@
   list-style-type: square;
 }
 .public-DraftStyleDefault-unorderedListItem.public-DraftStyleDefault-image {
-  list-style-image: url('');
+  list-style-image: url('../global/supports/resources/image/triangle.png');
 }
 .public-DraftStyleDefault-orderedListItem {
   list-style-type: none;

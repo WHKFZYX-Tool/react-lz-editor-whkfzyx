@@ -81,7 +81,7 @@ var StyleButton = function (_React$Component) {
                 _react2.default.createElement(
                     _menu2.default.Item,
                     { key: 'unordered-list-item-image' },
-                    '\u25BA \u5C0F\u4E09\u89D2'
+                    '\u25B6 \u5C0F\u4E09\u89D2'
                 )
             );
 

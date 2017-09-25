@@ -301,6 +301,10 @@ var MarkupGenerator = function () {
         this.currentBlockDepth = this.previousBlockLastDepth + depth > 4 ? 4 : this.previousBlockLastDepth + depth;
       }
 
+      if (this.currentBlockDepth > this.maxLiDepth) {
+        this.maxLiDepth = this.currentBlockDepth;
+      }
+
       if (realBlockType !== realPreviousBlockType) {
         this.currentBlockStyleNum = getBlockStyleNum(realBlockType);
       } else {
@@ -311,6 +315,11 @@ var MarkupGenerator = function () {
 
       var olulType = blockType === 'unordered-list-item' ? _DraftBlockTypeAnalysis2.default.getUlStyleType(this.currentBlockStyleNum) : _DraftBlockTypeAnalysis2.default.getOlStyleType(this.currentBlockStyleNum);
 
+      if (this.previousBlockDepth === null || this.previousBlockDepth !== null && this.currentBlockDepth !== this.previousBlockDepth) {
+        currentDepth = null;
+      } else {
+        currentDepth = block.getDepth();
+      }
       var shouldResetCount = this.wrapperTag !== newWrapperTag || currentDepth === null || block.getDepth() > currentDepth;
       var className = getListItemClasses(blockType, this.currentBlockDepth, shouldResetCount, 'LTR', olulType);
       this.writeStartTag(blockType, blockData, className);
@@ -322,17 +331,11 @@ var MarkupGenerator = function () {
         this.output.push('\n');
 
         var thisWrapperTag = this.wrapperTag;
-
-        this.currentBlock += 1;
-        currentDepth = block.getDepth();
-        this.previousBlockDepth = this.currentBlockDepth;
-
         this.wrapperTag = thisWrapperTag;
-      } else {
-        this.currentBlock += 1;
-        currentDepth = null;
-        this.previousBlockDepth = this.currentBlockDepth;
       }
+
+      this.currentBlock += 1;
+      this.previousBlockDepth = this.currentBlockDepth;
     }
   }, {
     key: 'processBlocksAtDepth',

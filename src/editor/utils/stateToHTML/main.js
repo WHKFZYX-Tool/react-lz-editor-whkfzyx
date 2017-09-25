@@ -228,8 +228,12 @@ class MarkupGenerator {
     //获取当前Block的层级，上一层的层级数+当前depth>当前层级数，就赋值上一层的层级数+depth为当前层级，最大层级数为4。解决有序和无序列表混编  
     if (this.previousBlockLastDepth !== null && this.previousBlockLastDepth + depth > this.currentBlockDepth) {
       this.currentBlockDepth = (this.previousBlockLastDepth + depth) > 4 ? 4 : (this.previousBlockLastDepth + depth);
-    }    
+    }
 
+    //获取当前最大层级数
+    if (this.currentBlockDepth > this.maxLiDepth) {
+      this.maxLiDepth = this.currentBlockDepth;
+    }    
     //如果当层与上层的BlockType不同，样式就开始重新计数。相同则判断是否在同一层，如果不在同一层就+1
     if (realBlockType !== realPreviousBlockType) {
       this.currentBlockStyleNum = getBlockStyleNum(realBlockType);
@@ -243,6 +247,11 @@ class MarkupGenerator {
     ? DraftBlockTypeAnalysis.getUlStyleType(this.currentBlockStyleNum) 
     : DraftBlockTypeAnalysis.getOlStyleType(this.currentBlockStyleNum);
 
+    if(this.previousBlockDepth === null || (this.previousBlockDepth !== null && this.currentBlockDepth !== this.previousBlockDepth)){
+      currentDepth = null;
+    }else{
+      currentDepth = block.getDepth();
+    }
     const shouldResetCount = this.wrapperTag !== newWrapperTag || currentDepth === null || block.getDepth() > currentDepth;
     let className = getListItemClasses(blockType,this.currentBlockDepth,shouldResetCount,'LTR',olulType);
     this.writeStartTag(blockType,blockData,className);
@@ -259,20 +268,11 @@ class MarkupGenerator {
       // This is a litle hacky: temporarily stash our current wrapperTag and
       // render child list(s).
       let thisWrapperTag = this.wrapperTag;
-      //this.wrapperTag = null;
-      //this.indentLevel += 1;
-      this.currentBlock += 1;
-      currentDepth = block.getDepth();
-      this.previousBlockDepth = this.currentBlockDepth;   
-      //this.processBlocksAtDepth(nextBlock.getDepth());
       this.wrapperTag = thisWrapperTag;
-      //this.indentLevel -= 1;
-      //this.indent();
-    } else {
-      this.currentBlock += 1;
-      currentDepth = null;
-      this.previousBlockDepth = this.currentBlockDepth;   
-    }       
+    }
+    
+    this.currentBlock += 1;
+    this.previousBlockDepth = this.currentBlockDepth;            
   }
 
   processBlocksAtDepth(depth: number) {

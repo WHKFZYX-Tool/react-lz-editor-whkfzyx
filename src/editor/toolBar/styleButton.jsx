@@ -23,7 +23,7 @@ class StyleButton extends React.Component {
             <Menu.Item key="unordered-list-item-disc">● 实心圆</Menu.Item>
             <Menu.Item key="unordered-list-item-circle">○ 空心圆</Menu.Item>
             <Menu.Item key="unordered-list-item-square">■ 小方块</Menu.Item>
-            <Menu.Item key="unordered-list-item-image">► 小三角</Menu.Item>
+            <Menu.Item key="unordered-list-item-image">▶ 小三角</Menu.Item>
         </Menu>
     );
     

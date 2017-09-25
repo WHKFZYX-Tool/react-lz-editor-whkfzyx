@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import StyleButton from "./styleButton"
+import DraftBlockTypeAnalysis from '../utils/DraftBlockTypeAnalysis'
 const BlockStyleControls = (props) => {
   const {editorState,lang} = props;
   const selection = editorState.getSelection();
-  const blockType = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
+  //ul和ol的下拉按钮的type都转成ul与ol的type,保持跟ul和ol的操作不变
+  const blockType = DraftBlockTypeAnalysis.getDraftBlockTypeAnalysis(editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType());
+    
   const BLOCK_TYPES = [
     {
       text:lang.H1,
