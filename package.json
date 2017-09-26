@@ -1,6 +1,6 @@
 {
   "name": "react-lz-editor-whkfzyx",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "An open source react editor based on react-lz-editor and draft-Js and ant design, good support HTML, markdown and Draft Raw format.",
   "main": "index.js",
   "scripts": {
@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "antd": "^2.8.3",
-    "draft-js-whkfzyx": "^0.10.0",
+    "draft-js-whkfzyx": "^0.10.1",
     "immutable": "^3.8.1",
     "js-base64": "^2.1.9",
     "lodash": "^4.17.3",

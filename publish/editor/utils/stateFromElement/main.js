@@ -257,6 +257,9 @@ var BlockGenerator = function () {
       if (element.style && element.style.textAlign) {
         blockData.set("textAlignment", element.style.textAlign);
       }
+      if (element.className && element.className !== "") {
+        blockData.set("class", element.className);
+      }
       var block = {
         tagName: tagName,
         textFragments: [],

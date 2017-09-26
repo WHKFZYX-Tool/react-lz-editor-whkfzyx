@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "86824485a79db86a067a"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "831eafe8062633ecd6e4"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -55781,7 +55781,7 @@
 
 	      var depth = _block.getDepth();
 	      var className = this.props.blockStyleFn(_block);
-
+	      var receiveClassName = getReceiveClass(_block);
 	      //获取上一个Block和BlockType
 	      var previousBlock = getPreviousBlock(blocksAsArray, currentBlock);
 	      var previousBlockType = null;
@@ -55828,7 +55828,7 @@
 	        var olulType = blockType === 'unordered-list-item' ? DraftBlockTypeAnalysis.getUlStyleType(currentBlockStyleNum) : DraftBlockTypeAnalysis.getOlStyleType(currentBlockStyleNum);
 
 	        var shouldResetCount = lastWrapperTemplate !== wrapperTemplate || currentDepth === null || depth > currentDepth;
-	        className = joinClasses(className, getListItemClasses(blockType, currentBlockDepth, shouldResetCount, direction, olulType));
+	        className = joinClasses(className, receiveClassName !== "" ? receiveClassName : getListItemClasses(blockType, currentBlockDepth, shouldResetCount, direction, olulType));
 	      }
 
 	      var Component = CustomComponent || DraftEditorBlock;
@@ -55975,6 +55975,17 @@
 	    default:
 	      return 0;
 	  }
+	}
+
+	function getReceiveClass(block) {
+	  var data = block.getData();
+
+	  var mergedStyle = "";
+
+	  if (data.has("class")) {
+	    mergedStyle = data.get("class");
+	  }
+	  return mergedStyle;
 	}
 
 	module.exports = DraftEditorContents;
@@ -64883,6 +64894,9 @@
 	      var blockData = new Map();
 	      if (element.style && element.style.textAlign) {
 	        blockData.set("textAlignment", element.style.textAlign);
+	      }
+	      if (element.className && element.className !== "") {
+	        blockData.set("class", element.className);
 	      }
 	      var block = {
 	        tagName: tagName,
