@@ -1,6 +1,6 @@
 {
   "name": "react-lz-editor-whkfzyx",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "An open source react editor based on react-lz-editor and draft-Js and ant design, good support HTML, markdown and Draft Raw format.",
   "main": "index.js",
   "scripts": {
