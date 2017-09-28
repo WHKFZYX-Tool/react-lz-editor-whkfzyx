@@ -254,7 +254,7 @@ class MarkupGenerator {
     }
     const shouldResetCount = this.wrapperTag !== newWrapperTag || currentDepth === null || block.getDepth() > currentDepth;
     let className = getListItemClasses(blockType,this.currentBlockDepth,shouldResetCount,'LTR',olulType);
-    this.writeStartTag(blockType,blockData,className);
+    this.writeStartTag(blockType,blockData,className,depth);
     this.output.push(this.renderBlockContent(block));
     this.writeEndTag(blockType);
     // Look ahead and see if we will nest list.
@@ -288,7 +288,7 @@ class MarkupGenerator {
     return this.blocks[this.currentBlock + 1];
   }
 
-  writeStartTag(blockType,blockData,className) {
+  writeStartTag(blockType,blockData,className,depth) {
     let tags = getTags(blockType);
     let blockStyle="",blockAlign=blockData.get("textAlignment");
     if (blockAlign) {
@@ -296,9 +296,9 @@ class MarkupGenerator {
     }
     for (let tag of tags) {
       if(tag === 'li'){
-        this.output.push(`<${tag} ${blockStyle?(" style='"+blockStyle+"'"):""} ${className?(" class='"+className+"'"):""}>`);
+        this.output.push(`<${tag} ${blockStyle?(" style='"+blockStyle+"'"):""} ${depth!==null?(" depth='"+depth+"'"):""} ${className?(" class='"+className+"'"):""}>`);
       }else{
-        this.output.push(`<${tag} ${blockStyle?(" style='"+blockStyle+"'"):""}>`);
+        this.output.push(`<${tag} ${blockStyle?(" style='"+blockStyle+"'"):""} ${depth!==null?(" depth='"+depth+"'"):""}>`);
       }      
     }
   }

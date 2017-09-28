@@ -275,6 +275,9 @@ class BlockGenerator {
     if (element.className&&element.className!=="") {
       blockData.set("class",element.className);
     }    
+    if (element.getAttribute("depth")&&element.getAttribute("depth")!=="") {
+      this.depth = parseInt(element.getAttribute("depth"));
+    }
     let block: ParsedBlock = {
       tagName: tagName,
       textFragments: [],

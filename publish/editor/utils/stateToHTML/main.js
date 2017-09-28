@@ -322,7 +322,7 @@ var MarkupGenerator = function () {
       }
       var shouldResetCount = this.wrapperTag !== newWrapperTag || currentDepth === null || block.getDepth() > currentDepth;
       var className = getListItemClasses(blockType, this.currentBlockDepth, shouldResetCount, 'LTR', olulType);
-      this.writeStartTag(blockType, blockData, className);
+      this.writeStartTag(blockType, blockData, className, depth);
       this.output.push(this.renderBlockContent(block));
       this.writeEndTag(blockType);
 
@@ -354,7 +354,7 @@ var MarkupGenerator = function () {
     }
   }, {
     key: 'writeStartTag',
-    value: function writeStartTag(blockType, blockData, className) {
+    value: function writeStartTag(blockType, blockData, className, depth) {
       var tags = getTags(blockType);
       var blockStyle = "",
           blockAlign = blockData.get("textAlignment");
@@ -370,9 +370,9 @@ var MarkupGenerator = function () {
           var tag = _step5.value;
 
           if (tag === 'li') {
-            this.output.push('<' + tag + ' ' + (blockStyle ? " style='" + blockStyle + "'" : "") + ' ' + (className ? " class='" + className + "'" : "") + '>');
+            this.output.push('<' + tag + ' ' + (blockStyle ? " style='" + blockStyle + "'" : "") + ' ' + (depth !== null ? " depth='" + depth + "'" : "") + ' ' + (className ? " class='" + className + "'" : "") + '>');
           } else {
-            this.output.push('<' + tag + ' ' + (blockStyle ? " style='" + blockStyle + "'" : "") + '>');
+            this.output.push('<' + tag + ' ' + (blockStyle ? " style='" + blockStyle + "'" : "") + ' ' + (depth !== null ? " depth='" + depth + "'" : "") + '>');
           }
         }
       } catch (err) {

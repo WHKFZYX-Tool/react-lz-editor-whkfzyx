@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "831eafe8062633ecd6e4"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "6e4ff1977b79c16dc059"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -64898,6 +64898,9 @@
 	      if (element.className && element.className !== "") {
 	        blockData.set("class", element.className);
 	      }
+	      if (element.getAttribute("depth") && element.getAttribute("depth") !== "") {
+	        this.depth = parseInt(element.getAttribute("depth"));
+	      }
 	      var block = {
 	        tagName: tagName,
 	        textFragments: [],
@@ -71298,7 +71301,7 @@
 	      }
 	      var shouldResetCount = this.wrapperTag !== newWrapperTag || currentDepth === null || block.getDepth() > currentDepth;
 	      var className = getListItemClasses(blockType, this.currentBlockDepth, shouldResetCount, 'LTR', olulType);
-	      this.writeStartTag(blockType, blockData, className);
+	      this.writeStartTag(blockType, blockData, className, depth);
 	      this.output.push(this.renderBlockContent(block));
 	      this.writeEndTag(blockType);
 	      // Look ahead and see if we will nest list.
@@ -71331,7 +71334,7 @@
 	    }
 	  }, {
 	    key: 'writeStartTag',
-	    value: function writeStartTag(blockType, blockData, className) {
+	    value: function writeStartTag(blockType, blockData, className, depth) {
 	      var tags = getTags(blockType);
 	      var blockStyle = "",
 	          blockAlign = blockData.get("textAlignment");
@@ -71347,9 +71350,9 @@
 	          var tag = _step5.value;
 
 	          if (tag === 'li') {
-	            this.output.push('<' + tag + ' ' + (blockStyle ? " style='" + blockStyle + "'" : "") + ' ' + (className ? " class='" + className + "'" : "") + '>');
+	            this.output.push('<' + tag + ' ' + (blockStyle ? " style='" + blockStyle + "'" : "") + ' ' + (depth !== null ? " depth='" + depth + "'" : "") + ' ' + (className ? " class='" + className + "'" : "") + '>');
 	          } else {
-	            this.output.push('<' + tag + ' ' + (blockStyle ? " style='" + blockStyle + "'" : "") + '>');
+	            this.output.push('<' + tag + ' ' + (blockStyle ? " style='" + blockStyle + "'" : "") + ' ' + (depth !== null ? " depth='" + depth + "'" : "") + '>');
 	          }
 	        }
 	      } catch (err) {
