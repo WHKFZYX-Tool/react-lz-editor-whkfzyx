@@ -45,18 +45,18 @@
     "eslint-plugin-react": "^6.8.0",
     "file-loader": "^0.8.5",
     "flow-bin": "^0.37.4",
+    "hmacsha1": "^1.0.0",
     "less": "^2.7.2",
     "less-loader": "^2.2.3",
+    "md5": "^2.2.1",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.14",
-    "webpack-dev-server": "^1.14.1",
-    "hmacsha1": "^1.0.0",
-    "md5": "^2.2.1"
+    "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
     "antd": "^2.8.3",
-    "draft-js-whkfzyx": "^0.10.1",
+    "draft-js-whkfzyx": "^0.10.2",
     "immutable": "^3.8.1",
     "js-base64": "^2.1.9",
     "lodash": "^4.17.3",

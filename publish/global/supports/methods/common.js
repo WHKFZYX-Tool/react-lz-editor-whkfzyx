@@ -937,7 +937,7 @@ var commonFun = {
     log: function log(message) {
       var messageDiv = document.getElementById("messageDiv");
       if (!!messageDiv) {
-        messageDiv.innerHTML = _message2.default + "<br />" + messageDiv.innerHTML;
+        messageDiv.innerHTML = message + "<br />" + messageDiv.innerHTML;
       } else {
         var newEl = document.createElement('div');
         newEl.setAttribute('id', 'messageDiv');

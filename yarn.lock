@@ -1492,9 +1492,17 @@ domain-browser@^1.1.1:
   version "1.1.7"
   resolved "http://registry.npm.taobao.org/domain-browser/download/domain-browser-1.1.7.tgz#867aa4b093faa05f1de08c06f4d7b21fdf8698bc"
 
-draft-js-whkfzyx@^0.10.0, draft-js-whkfzyx@~0.10.0:
+draft-js-whkfzyx@^0.10.2:
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/draft-js-whkfzyx/-/draft-js-whkfzyx-0.10.2.tgz#be360a7df4fdf07ae8c851bfc8130e15e02556cb"
+  dependencies:
+    fbjs "^0.8.12"
+    immutable "~3.7.4"
+    object-assign "^4.1.0"
+
+draft-js@^0.10.0, draft-js@~0.10.0:
   version "0.10.0"
-  resolved "http://registry.npm.taobao.org/draft-js-whkfzyx/download/draft-js-whkfzyx-0.10.0.tgz#29d16191012b932fdab28a9b37ec1538f421abf6"
+  resolved "http://registry.npm.taobao.org/draft-js/download/draft-js-0.10.0.tgz#29d16191012b932fdab28a9b37ec1538f421abf6"
   dependencies:
     fbjs "^0.8.7"
     immutable "~3.7.4"
@@ -1837,6 +1845,18 @@ faye-websocket@~0.11.0:
 fbjs@^0.8.1, fbjs@^0.8.4, fbjs@^0.8.7, fbjs@^0.8.9:
   version "0.8.12"
   resolved "http://registry.npm.taobao.org/fbjs/download/fbjs-0.8.12.tgz#10b5d92f76d45575fd63a217d4ea02bea2f8ed04"
+  dependencies:
+    core-js "^1.0.0"
+    isomorphic-fetch "^2.1.1"
+    loose-envify "^1.0.0"
+    object-assign "^4.1.0"
+    promise "^7.1.1"
+    setimmediate "^1.0.5"
+    ua-parser-js "^0.7.9"
+
+fbjs@^0.8.12:
+  version "0.8.16"
+  resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.16.tgz#5e67432f550dc41b572bf55847b8aca64e5337db"
   dependencies:
     core-js "^1.0.0"
     isomorphic-fetch "^2.1.1"
@@ -3481,7 +3501,7 @@ rc-editor-core@~0.6.12:
   version "0.6.19"
   resolved "http://registry.npm.taobao.org/rc-editor-core/download/rc-editor-core-0.6.19.tgz#7709fdaa64d6dc69799818093b62e701f83a1365"
   dependencies:
-    draft-js-whkfzyx "^0.10.0"
+    draft-js "^0.10.0"
     fbjs "^0.8.9"
     immutable "^3.7.4"
     lodash "^4.16.5"
@@ -3492,7 +3512,7 @@ rc-editor-mention@~0.5.2:
   dependencies:
     classnames "^2.2.5"
     dom-scroll-into-view "^1.2.0"
-    draft-js-whkfzyx "~0.10.0"
+    draft-js "~0.10.0"
     immutable "^3.8.1"
     rc-animate "^2.3.0"
     rc-editor-core "~0.6.12"
