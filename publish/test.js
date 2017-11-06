@@ -201,30 +201,13 @@ var Test = function (_React$Component) {
           null,
           'Editor demo 2 (use markdown format ):'
         ),
-        _react2.default.createElement(_index2.default, {
-          active: true,
-          importContent: this.state.markdownContent,
-          cbReceiver: this.receiveMarkdown,
-          image: false,
-          video: false,
-          audio: false,
-          convertFormat: 'markdown' }),
         _react2.default.createElement('br', null),
         _react2.default.createElement('br', null),
         _react2.default.createElement(
           'div',
           null,
           'Editor demo 3 (use Raw format ):'
-        ),
-        _react2.default.createElement(_index2.default, {
-          active: true,
-          importContent: this.state.rawContent,
-          cbReceiver: this.receiveRaw,
-          image: false,
-          video: false,
-          audio: false,
-          convertFormat: 'raw',
-          lang: 'zh-CN' })
+        )
       );
     }
   }]);

@@ -45,10 +45,12 @@ const DraftBlockTypeAnalysis = {
       },
 
     getUlStyleType: function(styleKey: number): string{
+        styleKey = styleKey % ulStyleType.size;
         return ulStyleType.get(styleKey,'disc');
     },  
     
     getOlStyleType: function(styleKey: number): string{
+        styleKey = styleKey % olStyleType.size;
         return olStyleType.get(styleKey,'decimalType1');
     },     
     

@@ -173,19 +173,19 @@ class Test extends React.Component {
         <br/>
         <div>Editor demo 2 (use markdown format ):
         </div>
-        <LzEditor
+        {/* <LzEditor
           active={true}
           importContent={this.state.markdownContent}
           cbReceiver={this.receiveMarkdown}
           image={false}
           video={false}
           audio={false}
-          convertFormat="markdown"/>
+          convertFormat="markdown"/> */}
         <br/>
         <br/>
         <div>Editor demo 3 (use Raw format ):
         </div>
-        <LzEditor
+        {/* <LzEditor
           active={true}
           importContent={this.state.rawContent}
           cbReceiver={this.receiveRaw}
@@ -193,7 +193,7 @@ class Test extends React.Component {
           video={false}
           audio={false}
           convertFormat="raw"
-          lang="zh-CN"/>
+          lang="zh-CN"/> */}
       </div>
     );
   }

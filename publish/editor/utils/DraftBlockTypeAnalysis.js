@@ -28,10 +28,12 @@ var DraftBlockTypeAnalysis = {
     },
 
     getUlStyleType: function getUlStyleType(styleKey) {
+        styleKey = styleKey % ulStyleType.size;
         return ulStyleType.get(styleKey, 'disc');
     },
 
     getOlStyleType: function getOlStyleType(styleKey) {
+        styleKey = styleKey % olStyleType.size;
         return olStyleType.get(styleKey, 'decimalType1');
     }
 

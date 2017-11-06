@@ -241,9 +241,8 @@ var MarkupGenerator = function () {
 
       this.wrapperTag = null;
 
-      this.maxLiDepth = 0;
-      this.previousBlockLastDepth = null;
-      this.currentBlockDepth = null;
+      this.lastWrapperTag = null;
+      this.currentDepth = null;
       this.previousBlockDepth = null;
       this.currentBlockStyleNum = 0;
 
@@ -261,7 +260,7 @@ var MarkupGenerator = function () {
 
       blockType = _DraftBlockTypeAnalysis2.default.getDraftBlockTypeAnalysis(blockType);
       var realBlockType = block.getType();
-      var currentDepth = null;
+
       var blockData = block.getData();
       var newWrapperTag = getWrapperTag(blockType);
       if (this.wrapperTag !== newWrapperTag) {
@@ -284,44 +283,23 @@ var MarkupGenerator = function () {
         realPreviousBlockType = previousBlock.getType();
       }
 
-      if (!canHaveDepth(previousBlockType) && canHaveDepth(blockType)) {
-        this.maxLiDepth = 0;
-        this.previousBlockLastDepth = null;
-        this.currentBlockDepth = null;
+      if (depth === 0 || !canHaveDepth(previousBlockType) && canHaveDepth(blockType)) {
         this.previousBlockDepth = null;
-      }
-
-      this.currentBlockDepth = depth;
-
-      if (canHaveDepth(blockType) && canHaveDepth(previousBlockType) && blockType !== previousBlockType) {
-        this.previousBlockLastDepth = this.maxLiDepth;
-      }
-
-      if (this.previousBlockLastDepth !== null && this.previousBlockLastDepth + depth > this.currentBlockDepth) {
-        this.currentBlockDepth = this.previousBlockLastDepth + depth > 4 ? 4 : this.previousBlockLastDepth + depth;
-      }
-
-      if (this.currentBlockDepth > this.maxLiDepth) {
-        this.maxLiDepth = this.currentBlockDepth;
+        this.currentBlockStyleNum = depth;
       }
 
       if (realBlockType !== realPreviousBlockType) {
         this.currentBlockStyleNum = getBlockStyleNum(realBlockType);
       } else {
-        if (this.previousBlockDepth !== null && this.previousBlockDepth !== this.currentBlockDepth) {
+        if (this.previousBlockDepth !== null && this.previousBlockDepth !== depth) {
           this.currentBlockStyleNum += 1;
         }
       }
 
       var olulType = blockType === 'unordered-list-item' ? _DraftBlockTypeAnalysis2.default.getUlStyleType(this.currentBlockStyleNum) : _DraftBlockTypeAnalysis2.default.getOlStyleType(this.currentBlockStyleNum);
 
-      if (this.previousBlockDepth === null || this.previousBlockDepth !== null && this.currentBlockDepth !== this.previousBlockDepth) {
-        currentDepth = null;
-      } else {
-        currentDepth = block.getDepth();
-      }
-      var shouldResetCount = this.wrapperTag !== newWrapperTag || currentDepth === null || block.getDepth() > currentDepth;
-      var className = getListItemClasses(blockType, this.currentBlockDepth, shouldResetCount, 'LTR', olulType);
+      var shouldResetCount = this.lastWrapperTag !== newWrapperTag || this.currentDepth === null || depth > this.currentDepth;
+      var className = getListItemClasses(blockType, depth, shouldResetCount, 'LTR', olulType);
       this.writeStartTag(blockType, blockData, className, depth);
       this.output.push(this.renderBlockContent(block));
       this.writeEndTag(blockType);
@@ -333,9 +311,15 @@ var MarkupGenerator = function () {
         var thisWrapperTag = this.wrapperTag;
         this.wrapperTag = thisWrapperTag;
       }
+      if (newWrapperTag !== null) {
+        this.currentDepth = block.getDepth();
+      } else {
+        this.currentDepth = null;
+      }
 
       this.currentBlock += 1;
-      this.previousBlockDepth = this.currentBlockDepth;
+      this.previousBlockDepth = depth;
+      this.lastWrapperTag = newWrapperTag;
     }
   }, {
     key: 'processBlocksAtDepth',
