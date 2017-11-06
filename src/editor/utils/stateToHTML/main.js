@@ -442,6 +442,7 @@ function encodeContent(text: string): string {
     .split('<').join('&lt;')
     .split('>').join('&gt;')
     .split('\xA0').join('&nbsp;')
+    .split('\u0009').join('&emsp;')
     .split('\n').join(BREAK + '\n');
 }
 
