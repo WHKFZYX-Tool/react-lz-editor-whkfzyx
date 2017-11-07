@@ -577,7 +577,7 @@ function canHaveDepth(blockType) {
 }
 
 function encodeContent(text) {
-  return text.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split('\xA0').join('&nbsp;').split('\n').join(BREAK + '\n');
+  return text.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split('\xA0').join('&nbsp;').split('\t').join('&emsp;').split('\n').join(BREAK + '\n');
 }
 
 function encodeAttr(text) {

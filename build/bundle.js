@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "cd15d375a25eb84276be"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a8b17f9fb696926a4b74"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -70559,7 +70559,7 @@
 	}
 
 	function encodeContent(text) {
-	  return text.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split('\xA0').join('&nbsp;').split('\n').join(BREAK + '\n');
+	  return text.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split('\xA0').join('&nbsp;').split('\t').join('&emsp;').split('\n').join(BREAK + '\n');
 	}
 
 	function encodeAttr(text) {
